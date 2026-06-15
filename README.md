@@ -1,4 +1,4 @@
-# Vite Starter Theme
+# Werkstek Thema
 
 ![Screenshot](screenshot.png)
 
@@ -40,7 +40,7 @@ Running `npm run setup` launches an interactive script that personalizes the sta
 4. **Remove the welcome page** — optionally deletes the demo welcome page and resets the index template to a blank starting point.
 5. **Clean up after itself** — optionally deletes `setup.js` and removes the `setup` script from `package.json`.
 
-See an example of a theme created with the setup script: [vite-starter-theme-example](https://github.com/Etyamor/vite-starter-theme-example)
+See an example of a theme created with the setup script: [werkstek-thema-example](https://github.com/Etyamor/werkstek-thema-example)
 
 ## Development
 

@@ -1,13 +1,12 @@
 {
-  "name": "vite-starter-theme",
+  "name": "werkstek-thema",
   "version": "1.0.0",
   "scripts": {
     "build": "vite build",
-    "dev": "rimraf ./dist/.vite/manifest.json && vite",
-    "setup": "node setup.js"
+    "dev": "rimraf ./dist/.vite/manifest.json && vite"
   },
   "devDependencies": {
-    "@fontsource/roboto": "^5.2.8",
+    "@fontsource/lexend": "^5.2.11",
     "@tailwindcss/vite": "^4.1.13",
     "rimraf": "^6.0.1",
     "sharp": "^0.34.4",

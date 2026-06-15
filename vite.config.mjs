@@ -3,17 +3,35 @@ import { defineConfig } from 'vite';
 import tailwindcss from '@tailwindcss/vite'
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 
-const ROOT = path.resolve('../../../');
-const BASE = __dirname.replace(ROOT, '');
+const THEME_DIR = __dirname;
+const PUBLIC_DIR = path.resolve(THEME_DIR, '../../..');
+const BASE = `/${path.relative(PUBLIC_DIR, THEME_DIR).replace(/\\/g, '/')}`;
 
-export default defineConfig({
-    base: process.env.NODE_ENV === 'production' ? `${BASE}/dist/` : BASE,
+export default defineConfig(({ command }) => ({
+    root: THEME_DIR,
+    base: command === 'build' ? `${BASE}/dist/` : '/',
     server: {
         cors: true,
+        host: true,
+        strictPort: true,
+        fs: {
+            allow: [THEME_DIR],
+        },
+        watch: {
+            usePolling: true,
+        },
     },
     plugins: [
         tailwindcss(),
         ViteImageOptimizer(),
+        {
+            name: 'php-reload',
+            handleHotUpdate({ file, server }) {
+                if (file.endsWith('.php')) {
+                    server.ws.send({ type: 'full-reload' });
+                }
+            },
+        },
     ],
     build: {
         manifest: true,
@@ -45,4 +63,4 @@ export default defineConfig({
             },
         },
     },
-});
+}));

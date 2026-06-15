@@ -1,5 +1,7 @@
-@import "@fontsource/roboto";
+@import "@fontsource/lexend";
 
 html {
-  font-family: 'Roboto', sans-serif;
+  font-family: 'Lexend', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

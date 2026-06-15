@@ -3,29 +3,78 @@
  * Asset Loading - Unified Dev and Production
  */
 
-// Define production constants (needed to check environment)
+// Define shared constants.
 define('VITE_THEME_ASSETS_DIR', get_template_directory_uri() . '/dist');
 define('VITE_THEME_MANIFEST_PATH', get_template_directory() . '/dist/.vite/manifest.json');
+define('VITE_THEME_DEV_SERVER', 'http://localhost:5173');
+define('VITE_THEME_DEV_ASSETS_DIR', 'resources');
+define('VITE_THEME_DEV_CLIENT_PATH', VITE_THEME_DEV_SERVER . '/@vite/client');
+define('VITE_THEME_DEV_SCRIPTS_PATH', VITE_THEME_DEV_SERVER . '/resources/scripts/scripts.js');
+define('VITE_THEME_DEV_STYLES_PATH', VITE_THEME_DEV_SERVER . '/resources/styles/styles.css');
+define('WERKSTEK_GOOGLE_MAPS_API_KEY', 'AIzaSyA-V9ozwY0Aw4MSO7bSzY1SBXuOGIB4Dvg');
 
-// Environment detection
-$vite_is_production = file_exists(VITE_THEME_MANIFEST_PATH);
+function werkstek_allow_svg_uploads($mimes) {
+    if (current_user_can('upload_files')) {
+        $mimes['svg'] = 'image/svg+xml';
+        $mimes['svgz'] = 'image/svg+xml';
+    }
 
-// Define mode-specific constants
-if (!$vite_is_production) {
-    // Development constants
-    define('VITE_THEME_DEV_SERVER', 'http://localhost:5173');
-    define('VITE_THEME_DEV_DIR', 'wp-content/themes/' . basename(get_template_directory()));
-    define('VITE_THEME_DEV_ASSETS_DIR', VITE_THEME_DEV_DIR . '/resources');
-    define('VITE_THEME_DEV_CLIENT_PATH', VITE_THEME_DEV_SERVER . '/' . VITE_THEME_DEV_DIR . '/@vite/client');
-    define('VITE_THEME_DEV_SCRIPTS_PATH', VITE_THEME_DEV_SERVER . '/' . VITE_THEME_DEV_ASSETS_DIR . '/scripts/scripts.js');
-    define('VITE_THEME_DEV_STYLES_PATH', VITE_THEME_DEV_SERVER . '/' . VITE_THEME_DEV_ASSETS_DIR . '/styles/styles.css');
+    return $mimes;
+}
+add_filter('upload_mimes', 'werkstek_allow_svg_uploads');
+
+function werkstek_fix_svg_filetype_check($data, $file, $filename, $mimes) {
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+
+    if (in_array($extension, ['svg', 'svgz'], true)) {
+        return [
+            'ext' => $extension,
+            'type' => 'image/svg+xml',
+            'proper_filename' => $data['proper_filename'] ?? false,
+        ];
+    }
+
+    return $data;
+}
+add_filter('wp_check_filetype_and_ext', 'werkstek_fix_svg_filetype_check', 10, 4);
+
+function vite_theme_has_manifest() {
+    return file_exists(VITE_THEME_MANIFEST_PATH);
+}
+
+function vite_theme_is_dev_server_available() {
+    static $available = null;
+
+    if ($available !== null) {
+        return $available;
+    }
+
+    $cache_key = 'vite_theme_dev_server_available';
+    $cached = get_transient($cache_key);
+
+    if ($cached !== false) {
+        $available = $cached === 'yes';
+        return $available;
+    }
+
+    $response = wp_remote_get(VITE_THEME_DEV_CLIENT_PATH, [
+        'timeout' => 1,
+    ]);
+
+    $available = !is_wp_error($response) && wp_remote_retrieve_response_code($response) === 200;
+
+    set_transient($cache_key, $available ? 'yes' : 'no', 5);
+
+    return $available;
 }
 
 // Unified asset enqueuing
-add_action('wp_enqueue_scripts', function() use ($vite_is_production) {
+add_action('wp_enqueue_scripts', function() {
     $theme_version = wp_get_theme()->get('Version');
+    $module_handles = ['vite-client', 'werkstek-thema-scripts'];
+    $use_dev_server = vite_theme_is_dev_server_available();
 
-    if ($vite_is_production) {
+    if (!$use_dev_server && vite_theme_has_manifest()) {
         // Production: Load from manifest
         $manifest = json_decode(file_get_contents(VITE_THEME_MANIFEST_PATH), true);
         if (is_array($manifest)) {
@@ -37,21 +86,32 @@ add_action('wp_enqueue_scripts', function() use ($vite_is_production) {
                     wp_enqueue_style($handle, VITE_THEME_ASSETS_DIR . '/' . $file, [], $theme_version);
                 } elseif ($ext === 'js') {
                     wp_enqueue_script($handle, VITE_THEME_ASSETS_DIR . '/' . $file, [], $theme_version, true);
+                    $module_handles[] = $handle;
                 }
             }
         }
-    } else {
+    } elseif ($use_dev_server) {
         // Development: Load from Vite dev server
         wp_enqueue_script('vite-client', VITE_THEME_DEV_CLIENT_PATH, [], null, true);
-
-        add_filter('script_loader_tag', function ($tag, $handle) {
-            if ($handle === 'vite-client') {
-                return str_replace('<script ', '<script type="module" ', $tag);
-            }
-            return $tag;
-        }, 10, 2);
-
-        wp_enqueue_script('theme-scripts', VITE_THEME_DEV_SCRIPTS_PATH, [], null, true);
-        wp_enqueue_style('theme-styles', VITE_THEME_DEV_STYLES_PATH, [], null);
+        wp_enqueue_script('werkstek-thema-scripts', VITE_THEME_DEV_SCRIPTS_PATH, [], null, true);
+        wp_enqueue_style('werkstek-thema-styles', VITE_THEME_DEV_STYLES_PATH, [], null);
     }
+
+    if ((is_post_type_archive('kantoorruimte') || is_tax('locatie')) && WERKSTEK_GOOGLE_MAPS_API_KEY) {
+        wp_enqueue_script(
+            'werkstek-google-maps',
+            'https://maps.googleapis.com/maps/api/js?key=' . rawurlencode(WERKSTEK_GOOGLE_MAPS_API_KEY) . '&v=weekly',
+            [],
+            null,
+            true
+        );
+    }
+
+    add_filter('script_loader_tag', function ($tag, $handle) use ($module_handles) {
+        if (in_array($handle, $module_handles, true)) {
+            return str_replace('<script ', '<script type="module" ', $tag);
+        }
+
+        return $tag;
+    }, 10, 2);
 });
