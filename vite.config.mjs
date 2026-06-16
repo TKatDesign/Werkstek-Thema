@@ -4,8 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { ViteImageOptimizer } from 'vite-plugin-image-optimizer';
 
 const THEME_DIR = __dirname;
-const PUBLIC_DIR = path.resolve(THEME_DIR, '../../..');
-const BASE = `/${path.relative(PUBLIC_DIR, THEME_DIR).replace(/\\/g, '/')}`;
+const BASE = '/wp-content/themes/werkstek-thema';
 
 export default defineConfig(({ command }) => ({
     root: THEME_DIR,
