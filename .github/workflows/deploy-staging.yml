@@ -1,0 +1,23 @@
+name: Deploy staging
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Deploy to Vimexx
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: 185.104.29.80
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./
+          server-dir: /public_html/test/wp-content/themes/werkstek-thema/
