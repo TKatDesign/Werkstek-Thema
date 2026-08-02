@@ -87,7 +87,19 @@ $default_active_index = count($community_videos) > 1 ? 1 : 0;
                     aria-labelledby="<?php echo esc_attr($component_id . '-tab-' . $video['id']); ?>"
                 >
                     <div class="community-video-player mx-auto max-w-4xl overflow-hidden rounded-[2.25rem] bg-slate-900 shadow-[0_28px_70px_rgba(15,23,42,0.16)]" data-community-video-player>
-                        <?php if ($video['video_type'] === 'embed' && $video['video_embed']): ?>
+                        <?php if ($video['video_type'] === 'youtube' && $video['youtube_embed_url']): ?>
+                            <div class="aspect-video">
+                                <iframe
+                                    src="<?php echo esc_url($video['youtube_embed_url']); ?>"
+                                    title="<?php echo esc_attr($video['title']); ?>"
+                                    class="h-full w-full"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                    referrerpolicy="strict-origin-when-cross-origin"
+                                    allowfullscreen
+                                    loading="lazy"
+                                ></iframe>
+                            </div>
+                        <?php elseif ($video['video_type'] === 'embed' && $video['video_embed']): ?>
                             <div class="aspect-[16/10] [&_iframe]:h-full [&_iframe]:w-full [&_video]:h-full [&_video]:w-full [&_video]:object-cover">
                                 <?php echo $video['video_embed']; ?>
                             </div>

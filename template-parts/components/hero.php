@@ -1,5 +1,25 @@
 <?php
 $afbeelding = get_sub_field('afbeelding');
+$video = get_sub_field('video') ?: get_sub_field('hero_video') ?: get_sub_field('video_bestand');
+$video_url = '';
+$video_mime = '';
+
+if (is_array($video)) {
+    $video_id = isset($video['ID']) ? (int) $video['ID'] : (isset($video['id']) ? (int) $video['id'] : 0);
+    $video_url = $video['url'] ?? ($video_id ? wp_get_attachment_url($video_id) : '');
+    $video_mime = $video['mime_type'] ?? '';
+
+    if (! $video_mime && $video_id) {
+        $video_mime = get_post_mime_type($video_id) ?: '';
+    }
+} elseif (is_numeric($video)) {
+    $video_url = wp_get_attachment_url((int) $video) ?: '';
+    $video_mime = get_post_mime_type((int) $video) ?: '';
+} elseif (is_string($video)) {
+    $video_url = trim($video);
+}
+
+$video_poster_url = is_array($afbeelding) ? ($afbeelding['url'] ?? '') : '';
 $titel = get_sub_field('titel') ?: 'De leukste plek, voor een werkstek';
 $kantoorruimte_archive_url = get_post_type_archive_link('kantoorruimte') ?: home_url('/kantoorruimte-huren/');
 $locatie_search_items = function_exists('werkstek_get_locatie_search_items') ? werkstek_get_locatie_search_items() : [];
@@ -117,7 +137,21 @@ $review_placeholders = ['A', 'B', 'C'];
                         mask-size: contain;
                     "
                 >
-                    <?php if ($afbeelding): ?>
+                    <?php if ($video_url): ?>
+                        <video
+                            autoplay
+                            muted
+                            loop
+                            playsinline
+                            preload="metadata"
+                            <?php if ($video_poster_url): ?>
+                                poster="<?php echo esc_url($video_poster_url); ?>"
+                            <?php endif; ?>
+                            class="h-full w-full object-cover"
+                        >
+                            <source src="<?php echo esc_url($video_url); ?>"<?php echo $video_mime ? ' type="' . esc_attr($video_mime) . '"' : ''; ?>>
+                        </video>
+                    <?php elseif ($afbeelding): ?>
                         <img
                             src="<?php echo esc_url($afbeelding['url']); ?>"
                             alt="<?php echo esc_attr($afbeelding['alt']); ?>"

@@ -116,6 +116,21 @@
     overflow: hidden;
   }
 
+  .werkstek-header-actions {
+    display: flex;
+  }
+
+  .werkstek-header-action {
+    display: inline-flex !important;
+    flex: 0 0 3rem;
+  }
+
+  .werkstek-header-action img {
+    display: block;
+    height: 1.25rem;
+    width: 1.25rem;
+  }
+
   .filter-overlay.is-open {
     visibility: visible;
     pointer-events: auto;

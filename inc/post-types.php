@@ -700,10 +700,45 @@ function werkstek_get_locatie_card_data($term) {
         'image' => $image_url,
         'count' => $count,
         'count_label' => sprintf(
-            _n('%d werkstekje', '%d werkstekjes', $count, 'werkstek-thema'),
+            _n('%d kantoorruimte', '%d kantoorruimtes', $count, 'werkstek-thema'),
             $count
         ),
     ];
+}
+
+function werkstek_get_youtube_embed_url($url) {
+    if (! is_string($url) || $url === '') {
+        return '';
+    }
+
+    $url = trim($url);
+
+    if (! preg_match('#^https?://#i', $url)) {
+        $url = 'https://' . ltrim($url, '/');
+    }
+
+    $parts = wp_parse_url($url);
+    $host = strtolower($parts['host'] ?? '');
+    $host = preg_replace('/^www\./', '', $host);
+    $path = trim($parts['path'] ?? '', '/');
+    $video_id = '';
+
+    if ($host === 'youtu.be') {
+        $video_id = explode('/', $path)[0] ?? '';
+    } elseif (in_array($host, ['youtube.com', 'm.youtube.com', 'music.youtube.com', 'youtube-nocookie.com'], true)) {
+        if ($path === 'watch') {
+            parse_str($parts['query'] ?? '', $query);
+            $video_id = $query['v'] ?? '';
+        } elseif (preg_match('#^(?:embed|shorts|live)/([^/]+)#', $path, $matches)) {
+            $video_id = $matches[1];
+        }
+    }
+
+    if (! preg_match('/^[a-zA-Z0-9_-]{11}$/', $video_id)) {
+        return '';
+    }
+
+    return 'https://www.youtube-nocookie.com/embed/' . rawurlencode($video_id) . '?rel=0&playsinline=1';
 }
 
 function werkstek_get_community_video_data($post_id) {
@@ -713,6 +748,7 @@ function werkstek_get_community_video_data($post_id) {
     $placeholder_url = '';
     $video_url = '';
     $video_embed = '';
+    $youtube_embed_url = '';
     $video_type = 'url';
 
     if (is_array($placeholder)) {
@@ -734,8 +770,9 @@ function werkstek_get_community_video_data($post_id) {
             $video_type = 'embed';
         } else {
             $video_url = $video;
-            $extension = strtolower(pathinfo(parse_url($video, PHP_URL_PATH) ?: '', PATHINFO_EXTENSION));
-            $video_type = in_array($extension, ['mp4', 'webm', 'ogg', 'mov'], true) ? 'file' : 'url';
+            $youtube_embed_url = werkstek_get_youtube_embed_url($video_url);
+            $extension = strtolower(pathinfo(wp_parse_url($video, PHP_URL_PATH) ?: '', PATHINFO_EXTENSION));
+            $video_type = $youtube_embed_url ? 'youtube' : (in_array($extension, ['mp4', 'webm', 'ogg', 'mov'], true) ? 'file' : 'url');
         }
     }
 
@@ -751,6 +788,7 @@ function werkstek_get_community_video_data($post_id) {
         'placeholder' => $placeholder_url ?: get_the_post_thumbnail_url($post_id, 'large') ?: $default_image,
         'video_url' => $video_url,
         'video_embed' => $video_embed,
+        'youtube_embed_url' => $youtube_embed_url,
         'video_type' => $video_type,
     ];
 }

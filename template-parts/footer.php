@@ -1,6 +1,7 @@
 <?php
 $site_name = get_bloginfo('name') ?: 'Werkstek';
 $skyline_banner = get_template_directory_uri() . '/resources/images/skyline-banner.png';
+$footer_logo = get_template_directory_uri() . '/resources/images/branding/werkstek-logo.png';
 $steden = ['Amsterdam', 'Den haag', 'Rotterdam', 'Utrecht', 'Haarlem'];
 $stekjes = ['Computerweg 1', 'Het Ravelijn 50', 'Papiermolen 26', 'Databankweg 20', 'Simon Stevinweg 27'];
 $werkstek_links = [
@@ -24,14 +25,8 @@ $socials = [
 
     <div class="relative mx-auto max-w-7xl px-5 pb-10 pt-16 sm:px-6 lg:pt-20">
         <div class="flex justify-center">
-            <a href="<?php echo esc_url(home_url('/')); ?>" class="flex items-center gap-3 text-slate-900">
-                <span class="relative inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-transparent text-orange-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" class="h-11 w-11 fill-current">
-                        <path d="M21 4h6v8h-6zM11 10h8v8h-8zM29 10h8v8h-8zM9 20h8v8H9zM20 20h8v8h-8zM31 20h8v8h-8zM9 31h8v8H9zM20 31h8v13h-8zM31 31h8v8h-8z"></path>
-                        <path d="M15.5 3.5c4.3 0 8.1 2.2 10.2 5.5-4.9.2-9.1 2.7-11.9 6.4-2.3-1.4-3.8-4-3.8-6.9 0-2.8 2.4-5 5.5-5z" class="text-lime-500"></path>
-                    </svg>
-                </span>
-                <span class="text-3xl font-bold"><?php echo esc_html($site_name); ?></span>
+            <a href="<?php echo esc_url(home_url('/')); ?>" aria-label="<?php echo esc_attr($site_name); ?> - home">
+                <img src="<?php echo esc_url($footer_logo); ?>" alt="<?php echo esc_attr($site_name); ?>" class="h-auto w-[220px] object-contain sm:w-[250px]">
             </a>
         </div>
 

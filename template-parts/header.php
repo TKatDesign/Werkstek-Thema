@@ -11,6 +11,7 @@
 <?php
 $site_name = get_bloginfo('name') ?: 'Werkstek';
 $mail_icon = get_template_directory_uri() . '/resources/images/solar_mailbox-outline.svg';
+$nav_mail_icon = get_template_directory_uri() . '/resources/images/solar_letter-outline.svg';
 $phone_icon = get_template_directory_uri() . '/resources/images/solar_phone-outline.svg';
 $custom_logo_id = get_theme_mod('custom_logo');
 $custom_logo = $custom_logo_id ? wp_get_attachment_image_src($custom_logo_id, 'full') : null;
@@ -32,7 +33,7 @@ $primary_menu_html = wp_nav_menu([
         <div class="flex min-w-0 items-center gap-6 xl:gap-8">
             <?php if ($custom_logo_url) : ?>
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="flex shrink-0 items-center text-slate-900" aria-label="<?php echo esc_attr($site_name); ?>">
-                    <img src="<?php echo esc_url($custom_logo_url); ?>" alt="<?php echo esc_attr($site_name); ?>" class="h-11 w-auto max-w-[220px] object-contain xl:h-12 xl:max-w-[260px]">
+                    <img src="<?php echo esc_url($custom_logo_url); ?>" alt="<?php echo esc_attr($site_name); ?>" class="h-13 w-auto max-w-[220px] object-contain xl:h-12 xl:max-w-[260px]">
                 </a>
             <?php else : ?>
                 <a href="<?php echo esc_url(home_url('/')); ?>" class="flex shrink-0 items-center gap-3 text-slate-900">
@@ -85,7 +86,7 @@ $primary_menu_html = wp_nav_menu([
             </label>
         </form>
 
-        <div class="flex shrink-0 items-center gap-3 xl:gap-8">
+        <div class="flex shrink-0 items-center gap-3 xl:gap-6">
             <div class="hidden items-center gap-3 lg:flex">
                 <div class="flex -space-x-3">
                     <div class="h-8 w-8 bg-[url(/resources/images/avatar1.png)] rounded-full bg-cover bg-center border-2 border-white"></div>
@@ -94,7 +95,23 @@ $primary_menu_html = wp_nav_menu([
                 </div>
                 <a href="#" class="text-base font-medium text-slate-800 transition hover:text-orange-500">Community</a>
             </div>
-                <div class="flex shrink-0 items-center gap-3 xl:gap-2">
+                <div class="werkstek-header-actions flex shrink-0 items-center gap-3 xl:gap-2">
+                    <a
+                        href="tel:0850290598"
+                        aria-label="Bel Werkstek"
+                        class="werkstek-header-action inline-flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 transition hover:bg-slate-200"
+                    >
+                        <img src="<?php echo esc_url($phone_icon); ?>" alt="" class="h-5 w-5 object-contain" aria-hidden="true">
+                    </a>
+
+                    <a
+                        href="mailto:info@werkstek.nl"
+                        aria-label="Mail Werkstek"
+                        class="werkstek-header-action inline-flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 transition hover:bg-slate-200"
+                    >
+                        <img src="<?php echo esc_url($nav_mail_icon); ?>" alt="" class="h-5 w-5 object-contain" aria-hidden="true">
+                    </a>
+
                     <button
                         type="button"
                         aria-label="Taal of locatie"
