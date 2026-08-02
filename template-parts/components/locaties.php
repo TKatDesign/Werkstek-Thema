@@ -16,6 +16,7 @@ if (is_array($button_link)) {
 $terms = get_terms([
     'taxonomy' => 'locatie',
     'hide_empty' => true,
+    'number' => 9,
     'orderby' => 'count',
     'order' => 'DESC',
 ]);

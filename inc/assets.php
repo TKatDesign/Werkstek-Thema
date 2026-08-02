@@ -11,7 +11,7 @@ define('VITE_THEME_DEV_ASSETS_DIR', 'resources');
 define('VITE_THEME_DEV_CLIENT_PATH', VITE_THEME_DEV_SERVER . '/@vite/client');
 define('VITE_THEME_DEV_SCRIPTS_PATH', VITE_THEME_DEV_SERVER . '/resources/scripts/scripts.js');
 define('VITE_THEME_DEV_STYLES_PATH', VITE_THEME_DEV_SERVER . '/resources/styles/styles.css');
-define('WERKSTEK_GOOGLE_MAPS_API_KEY', 'AIzaSyA-V9ozwY0Aw4MSO7bSzY1SBXuOGIB4Dvg');
+define('WERKSTEK_GOOGLE_MAPS_API_KEY', 'AIzaSyB-alg9vyS89fUT-39wNwYmmm1I9DV0jrY');
 
 function werkstek_allow_svg_uploads($mimes) {
     if (current_user_can('upload_files')) {
