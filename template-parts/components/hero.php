@@ -22,6 +22,8 @@ if (is_array($video)) {
 $video_poster_url = is_array($afbeelding) ? ($afbeelding['url'] ?? '') : '';
 $titel = get_sub_field('titel') ?: 'De leukste plek, voor een werkstek';
 $kantoorruimte_archive_url = get_post_type_archive_link('kantoorruimte') ?: home_url('/kantoorruimte-huren/');
+$leaf_one_url = get_template_directory_uri() . '/resources/images/branding/leaf-1.svg';
+$leaf_two_url = get_template_directory_uri() . '/resources/images/branding/leaf-2.svg';
 $locatie_search_items = function_exists('werkstek_get_locatie_search_items') ? werkstek_get_locatie_search_items() : [];
 $snel_naar_tags = ! empty($locatie_search_items) ? array_slice($locatie_search_items, 0, 3) : [
     ['name' => 'Amsterdam', 'url' => $kantoorruimte_archive_url],
@@ -35,30 +37,33 @@ $review_placeholders = ['A', 'B', 'C'];
     <div class="mx-auto max-w-7xl px-5 sm:px-6">
         <div class="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_minmax(320px,560px)] lg:gap-16">
             <div class="order-2 max-w-xl lg:order-1">
-                <h2 class="max-w-[12ch] text-4xl font-bold leading-[1.08] text-slate-900 sm:text-5xl lg:max-w-xl lg:text-6xl">
+                <h2 class="text-4xl font-bold leading-[1.08] text-slate-900 sm:text-5xl lg:max-w-xl lg:text-6xl">
                     <?php echo esc_html($titel); ?>
                 </h2>
 
-                <form class="mt-8 lg:mt-10" action="<?php echo esc_url($kantoorruimte_archive_url); ?>" method="get" data-location-search>
+                <form class="relative z-20 mt-8 lg:mt-10" action="<?php echo esc_url($kantoorruimte_archive_url); ?>" method="get" data-location-search>
                     <div class="flex flex-col gap-3 sm:flex-row sm:items-center">
                         <label class="relative block flex-1">
                             <span class="sr-only">Zoek plaats of adres</span>
                             <input
                                 type="text"
                                 name="locatie"
-                                list="hero-kantoorruimte-locaties"
                                 placeholder="Zoek plaats of adres..."
-                                class="h-12 w-full rounded-full border border-slate-200 bg-white px-5 text-[15px] text-slate-700 shadow-[0_10px_30px_rgba(15,23,42,0.08)] outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200 lg:px-6 lg:text-base"
+                                autocomplete="off"
+                                role="combobox"
+                                aria-autocomplete="list"
+                                aria-expanded="false"
+                                aria-controls="hero-kantoorruimte-locaties"
+                                class="h-12 w-full rounded-full border border-slate-200 bg-[#FCF8F3] px-5 text-[15px] text-slate-700 shadow-[0_10px_30px_rgba(15,23,42,0.08)] outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200 lg:px-6 lg:text-base"
                             >
-                            <datalist id="hero-kantoorruimte-locaties">
+                            <div id="hero-kantoorruimte-locaties" class="absolute left-0 right-0 top-[calc(100%+0.75rem)] hidden max-h-80 overflow-y-auto rounded-[1.25rem] bg-surface-200 px-2 py-3 shadow-[0_20px_50px_rgba(15,41,58,0.16)]" data-location-results role="listbox">
                                 <?php foreach ($locatie_search_items as $locatie): ?>
-                                    <option
-                                        value="<?php echo esc_attr($locatie['name']); ?>"
-                                        data-slug="<?php echo esc_attr($locatie['slug']); ?>"
-                                        data-url="<?php echo esc_url($locatie['url']); ?>"
-                                    ></option>
+                                    <a href="<?php echo esc_url($locatie['url']); ?>" class="block rounded-xl px-4 py-2.5 text-base font-medium text-dark-main transition hover:text-orange-accent focus:bg-white/60 focus:text-orange-accent focus:outline-none" data-location-option data-name="<?php echo esc_attr($locatie['name']); ?>" data-slug="<?php echo esc_attr($locatie['slug']); ?>" role="option">
+                                        <?php echo esc_html($locatie['name']); ?>
+                                    </a>
                                 <?php endforeach; ?>
-                            </datalist>
+                                <p class="hidden px-4 py-3 text-sm text-dark-main/60" data-location-empty>Geen locaties gevonden.</p>
+                            </div>
                         </label>
 
                         <div class="flex items-center gap-1 sm:w-auto">
@@ -88,7 +93,7 @@ $review_placeholders = ['A', 'B', 'C'];
                     <?php foreach ($snel_naar_tags as $tag): ?>
                         <a
                             href="<?php echo esc_url($tag['url']); ?>"
-                            class="inline-flex items-center rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
+                            class="inline-flex items-center rounded-full bg-surface-200 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200"
                         >
                             <?php echo esc_html($tag['name']); ?>
                         </a>
@@ -98,9 +103,9 @@ $review_placeholders = ['A', 'B', 'C'];
                 <div class="mt-8 flex flex-wrap items-center gap-4 text-slate-700 lg:mt-10">
                     <div class="flex -space-x-3">
                         <div class="flex -space-x-3">
-                            <div class="h-8 w-8 bg-[url(/resources/images/avatar1.png)] rounded-full bg-cover bg-center border-2 border-white"></div>
-                            <div class="h-8 w-8 bg-[url(/resources/images/avatar2.png)] rounded-full bg-cover bg-center border-2 border-white"></div>
-                            <div class="h-8 w-8 bg-[url(/resources/images/avatar3.png)] rounded-full bg-cover bg-center border-2 border-white"></div>
+                            <div class="h-8 w-8 bg-[url(/resources/images/avatar1.png)] rounded-full bg-cover bg-center border-2 border-surface"></div>
+                            <div class="h-8 w-8 bg-[url(/resources/images/avatar2.png)] rounded-full bg-cover bg-center border-2 border-surface"></div>
+                            <div class="h-8 w-8 bg-[url(/resources/images/avatar3.png)] rounded-full bg-cover bg-center border-2 border-surface"></div>
                         </div>
                     </div>
 
@@ -113,16 +118,18 @@ $review_placeholders = ['A', 'B', 'C'];
             </div>
 
             <div class="order-1 relative mx-auto w-full max-w-[300px] lg:order-2 lg:max-w-[560px]">
-                <div
+                <img
+                    src="<?php echo esc_url($leaf_one_url); ?>"
+                    alt=""
                     aria-hidden="true"
-                    class="absolute left-3 top-7 h-7 w-4 rounded-[999px_999px_999px_0] bg-lime-500/90 lg:left-6 lg:top-10 lg:h-10 lg:w-6"
-                    style="transform: rotate(-28deg);"
-                ></div>
-                <div
+                    class="absolute left-3 top-7 h-8 w-auto lg:left-6 lg:top-10 lg:h-[53px]"
+                >
+                <img
+                    src="<?php echo esc_url($leaf_two_url); ?>"
+                    alt=""
                     aria-hidden="true"
-                    class="absolute right-1 bottom-8 h-8 w-5 rounded-[999px_999px_999px_0] bg-lime-600/90 lg:-right-1 lg:bottom-14 lg:h-12 lg:w-7"
-                    style="transform: rotate(38deg);"
-                ></div>
+                    class="absolute bottom-8 right-1 h-6 w-auto lg:-right-1 lg:bottom-14 lg:h-[34px]"
+                >
 
                 <div
                     class="aspect-[1/1.04] overflow-hidden"

@@ -10,7 +10,7 @@ $pagination_url = static function ($page) {
 };
 ?>
 
-<section class="bg-white py-14 lg:py-24">
+<section class="py-14 lg:py-24">
     <div class="mx-auto max-w-7xl px-5 sm:px-6">
         <div class="mx-auto max-w-3xl text-center">
             <h1 class="text-5xl font-bold leading-tight text-slate-900 sm:text-6xl lg:text-[4.25rem]">
@@ -32,7 +32,7 @@ $pagination_url = static function ($page) {
                                 >
 
                                 <?php if (! empty($blog['term'])): ?>
-                                    <span class="absolute left-5 top-5 inline-flex min-h-10 items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-[0_12px_28px_rgba(15,23,42,0.12)]">
+                                    <span class="absolute left-5 top-5 inline-flex min-h-10 items-center gap-2 rounded-full bg-dark-main px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(15,23,42,0.12)]">
                                         <?php if (! empty($blog['term']['icon'])): ?>
                                             <img
                                                 src="<?php echo esc_url($blog['term']['icon']); ?>"
@@ -54,7 +54,7 @@ $pagination_url = static function ($page) {
                         <?php if (! empty($blog['tags'])): ?>
                             <div class="mt-4 flex flex-wrap gap-2">
                                 <?php foreach ($blog['tags'] as $tag): ?>
-                                    <span class="inline-flex rounded-full bg-[#eeeeee] px-4 py-2 text-base font-medium leading-none text-slate-900">
+                                    <span class="inline-flex rounded-full bg-surface-200 px-4 py-2 text-base font-medium leading-none text-slate-900">
                                         <?php echo esc_html($tag); ?>
                                     </span>
                                 <?php endforeach; ?>
@@ -73,7 +73,7 @@ $pagination_url = static function ($page) {
             <nav class="mt-16 flex justify-center lg:mt-20" aria-label="Blog paginering">
                 <div class="inline-flex min-h-12 items-center gap-3 rounded-full bg-[#eeeeee] px-4 py-2 text-base font-semibold text-slate-400">
                     <?php if ($current_page > 1): ?>
-                        <a href="<?php echo esc_url($pagination_url($current_page - 1)); ?>" class="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-900 transition hover:bg-white" aria-label="Vorige pagina">
+                        <a href="<?php echo esc_url($pagination_url($current_page - 1)); ?>" class="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-900 transition hover:bg-[#FCF8F3]" aria-label="Vorige pagina">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
                                 <path d="m15 18-6-6 6-6"></path>
                             </svg>
@@ -116,7 +116,7 @@ $pagination_url = static function ($page) {
                     <?php endforeach; ?>
 
                     <?php if ($current_page < $total_pages): ?>
-                        <a href="<?php echo esc_url($pagination_url($current_page + 1)); ?>" class="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-900 transition hover:bg-white" aria-label="Volgende pagina">
+                        <a href="<?php echo esc_url($pagination_url($current_page + 1)); ?>" class="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-900 transition hover:bg-[#FCF8F3]" aria-label="Volgende pagina">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
                                 <path d="m9 6 6 6-6 6"></path>
                             </svg>

@@ -28,7 +28,7 @@ if (empty($items)) {
 $component_id = 'faq-' . wp_unique_id();
 ?>
 
-<section class="bg-white py-16 lg:py-24">
+<section class="mt-32">
     <div class="mx-auto max-w-[1440px] px-5 sm:px-6 lg:px-12">
         <div class="mx-auto max-w-[696px] text-center">
             <?php if ($subtitel): ?>
@@ -46,7 +46,7 @@ $component_id = 'faq-' . wp_unique_id();
             <?php foreach ($items as $index => $item): ?>
                 <?php $is_open = $index === 0; ?>
                 <details
-                    class="group overflow-hidden rounded-[0.75rem] bg-[#f4f3f1] text-left text-[#a9bac8] transition open:border open:border-slate-200 open:bg-white open:text-slate-900 open:shadow-[0_10px_16px_rgba(15,23,42,0.03)]"
+                    class="group overflow-hidden rounded-[0.75rem] bg-[#EDD1B5] text-left text-dark-main/50 transition open:bg-surface-200 open:text-slate-900 open:shadow-[0_10px_16px_rgba(15,23,42,0.03)]"
                     name="<?php echo esc_attr($component_id); ?>"
                     <?php echo $is_open ? 'open' : ''; ?>
                 >

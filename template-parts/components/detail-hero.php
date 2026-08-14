@@ -31,16 +31,16 @@ if (is_array($afbeelding)) {
 }
 ?>
 
-<section class="overflow-hidden bg-light-gray pt-20 sm:py-0 lg:bg-white lg:pt-10 lg:pb-40">
-    <div class="mx-auto max-w-7xl lg:px-6">
-        <div class="relative overflow-hidden lg:rounded-[0.75rem] lg:bg-[#f4f3f1]">
-            <div class="relative z-10 px-5 sm:px-8 lg:flex lg:w-[56%] lg:flex-col lg:justify-center lg:px-16 lg:py-20">
-                <h1 class="max-w-[9ch] text-[3.25rem] font-bold leading-[0.98] text-slate-900 sm:text-6xl lg:text-[4.75rem]">
+<section class="overflow-hidden bg-surface">
+    <div class="mx-auto max-w-7xl px-5 sm:px-6">
+        <div class="relative grid min-h-[calc(100vh-6rem)] items-center gap-10 py-16 sm:py-20 lg:grid-cols-[minmax(0,0.9fr)_minmax(32rem,1.1fr)] lg:gap-8 lg:py-12">
+            <div class="relative z-10 lg:pb-4">
+                <h1 class="max-w-[9ch] text-[3.5rem] font-bold text-dark-main sm:text-6xl lg:text-[4.25rem]">
                     <?php echo nl2br(esc_html($titel)); ?>
                 </h1>
 
                 <?php if ($is_een_lijst && is_array($lijst) && ! empty($lijst)): ?>
-                    <ul class="mt-7 max-w-[33rem] space-y-3 text-lg font-normal leading-5 text-slate-900 lg:text-lg">
+                    <ul class="mt-10 max-w-[33rem] space-y-3 text-lg font-normal leading-6 text-dark-main lg:mt-12 lg:text-xl">
                         <?php foreach ($lijst as $item): ?>
                             <?php
                             $item_tekst = '';
@@ -55,48 +55,49 @@ if (is_array($afbeelding)) {
                                 continue;
                             }
                             ?>
-                            <li class="flex items-start gap-2">
-                                <img src="<?php echo esc_url($check_icon_url); ?>" alt="" class="mt-[-2px] h-5 w-5 shrink-0 object-contain" loading="lazy">
+                            <li class="flex items-start gap-3">
+                                <img src="<?php echo esc_url($check_icon_url); ?>" alt="" class="mt-0.5 h-5 w-5 shrink-0 object-contain" loading="lazy">
                                 <span><?php echo esc_html($item_tekst); ?></span>
                             </li>
                         <?php endforeach; ?>
                     </ul>
                 <?php elseif ($tekst): ?>
-                    <div class="mt-7 max-w-[33rem] text-lg font-normal leading-8 text-slate-900 lg:text-lg">
+                    <div class="mt-10 max-w-[33rem] text-lg font-normal leading-8 text-dark-main lg:mt-12 lg:text-xl">
                         <?php echo wp_kses_post(wpautop($tekst)); ?>
                     </div>
                 <?php endif; ?>
 
                 <?php if ($button_tekst && $button_url): ?>
-                    <div class="mt-8">
-                        <a
-                            href="<?php echo esc_url($button_url); ?>"
-                            target="<?php echo esc_attr($button_target); ?>"
-                            rel="<?php echo $button_target === '_blank' ? 'noopener noreferrer' : ''; ?>"
-                            class="inline-flex h-14 items-center gap-5 rounded-full bg-slate-900 py-1.5 pl-6 pr-3 text-base font-normal text-white transition hover:bg-slate-800"
-                        >
-                            <span><?php echo esc_html($button_tekst); ?></span>
-                            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-green-accent text-white">
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
-                                    <path d="M7 17 17 7"></path>
-                                    <path d="M9 7h8v8"></path>
-                                </svg>
-                            </span>
-                        </a>
+                    <div class="mt-10">
+                           <a
+                    href="<?php echo esc_url($button_url); ?>"
+                    target="<?php echo esc_attr($button_target); ?>"
+                    rel="<?php echo $button_target === '_blank' ? 'noopener noreferrer' : ''; ?>"
+                    class="group inline-flex items-center gap-4 rounded-full bg-dark-main py-2 pl-7 pr-2 text-base font-medium text-white transition hover:bg-orange-accent"
+                >
+                    <span><?php echo esc_html($button_tekst); ?></span>
+                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FCF8F3] text-dark-main shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-2">
+                            <path d="M7 17 17 7"></path>
+                            <path d="M9 7h8v8"></path>
+                        </svg>
+                    </span>
+                </a>
                     </div>
                 <?php endif; ?>
             </div>
 
-            <div class="mt-5 h-[445px] w-[135%] -translate-x-[18%] overflow-hidden sm:h-[520px] lg:absolute lg:inset-y-0 lg:right-0 lg:mt-0 lg:h-full lg:w-[47%] lg:translate-x-0">
+            <div class="relative mx-auto aspect-square w-full max-w-[39rem] self-center lg:justify-self-end">
                 <?php if ($afbeelding_url): ?>
                     <img
                         src="<?php echo esc_url($afbeelding_url); ?>"
                         alt="<?php echo esc_attr($afbeelding_alt); ?>"
-                        class="h-full w-full object-cover object-top lg:object-center"
+                        class="h-full w-full object-contain object-center"
                         loading="eager"
+                        fetchpriority="high"
                     >
                 <?php else: ?>
-                    <div class="flex h-full w-full items-center justify-center bg-slate-200 px-8 text-center text-sm font-medium text-slate-500">
+                    <div class="flex h-full w-full items-center justify-center rounded-full bg-surface-200 px-8 text-center text-sm font-medium text-slate-500">
                         Voeg een detail hero-afbeelding toe
                     </div>
                 <?php endif; ?>

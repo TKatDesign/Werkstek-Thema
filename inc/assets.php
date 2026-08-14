@@ -38,6 +38,38 @@ function werkstek_fix_svg_filetype_check($data, $file, $filename, $mimes) {
 }
 add_filter('wp_check_filetype_and_ext', 'werkstek_fix_svg_filetype_check', 10, 4);
 
+/**
+ * ACF 6.8.7+ validates image fields with wp_get_image_mime(), which only
+ * recognises raster images. Remove that specific validation error for SVGs;
+ * WordPress and SVG Support still perform their normal upload checks and
+ * sanitisation afterwards.
+ */
+function werkstek_allow_svg_in_acf_image_fields($errors, $file, $attachment, $field, $context) {
+    if (! current_user_can('upload_files') || ! is_array($errors)) {
+        return $errors;
+    }
+
+    $filename = '';
+
+    if (! empty($attachment['name'])) {
+        $filename = (string) $attachment['name'];
+    } elseif (! empty($file['name'])) {
+        $filename = (string) $file['name'];
+    } elseif (! empty($file['filename'])) {
+        $filename = (string) $file['filename'];
+    }
+
+    $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+    $mime = (string) ($attachment['mime'] ?? $attachment['type'] ?? $file['mime_type'] ?? $file['type'] ?? '');
+
+    if ($extension === 'svg' && ($mime === '' || in_array($mime, ['image/svg+xml', 'image/svg'], true))) {
+        unset($errors['invalid_image']);
+    }
+
+    return $errors;
+}
+add_filter('acf/validate_is_image_attachment', 'werkstek_allow_svg_in_acf_image_fields', 10, 5);
+
 function vite_theme_has_manifest() {
     return file_exists(VITE_THEME_MANIFEST_PATH);
 }

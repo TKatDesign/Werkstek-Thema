@@ -149,24 +149,113 @@ document.querySelectorAll('[data-tour-modal]').forEach((modal) => {
 
 document.querySelectorAll('[data-location-search]').forEach((form) => {
   const input = form.querySelector('input[name="locatie"]');
-  const listId = input?.getAttribute('list');
-  const dataList = listId ? document.getElementById(listId) : null;
-  const options = dataList ? Array.from(dataList.querySelectorAll('option')) : [];
+  const results = form.querySelector('[data-location-results]');
+  const emptyState = results?.querySelector('[data-location-empty]');
+  const options = results ? Array.from(results.querySelectorAll('[data-location-option]')) : [];
 
-  if (!input || !options.length) return;
+  if (!input || !results || !options.length) return;
 
-  const normalize = (value) => value.trim().toLowerCase().replace(/\s+/g, '-');
+  let visibleOptions = [];
+  let activeIndex = -1;
+
+  const normalize = (value) => value
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9]+/g, ' ')
+    .trim();
+
+  const getScore = (option, query) => {
+    if (!query) return 10;
+
+    const name = normalize(option.dataset.name || '');
+    const slug = normalize(option.dataset.slug || '');
+
+    if (name === query || slug === query) return 0;
+    if (name.startsWith(query)) return 1;
+    if (name.split(' ').some((word) => word.startsWith(query))) return 2;
+    if (name.includes(query) || slug.includes(query)) return 3;
+
+    let queryIndex = 0;
+    for (const character of name) {
+      if (character === query[queryIndex]) queryIndex += 1;
+      if (queryIndex === query.length) return 4;
+    }
+
+    return Number.POSITIVE_INFINITY;
+  };
+
+  const setActiveOption = (index) => {
+    activeIndex = index < 0 || !visibleOptions.length
+      ? -1
+      : index % visibleOptions.length;
+
+    options.forEach((option) => {
+      const isActive = option === visibleOptions[activeIndex];
+      option.classList.toggle('bg-white/60', isActive);
+      option.classList.toggle('text-orange-accent', isActive);
+      option.setAttribute('aria-selected', isActive ? 'true' : 'false');
+    });
+
+    visibleOptions[activeIndex]?.scrollIntoView({ block: 'nearest' });
+  };
+
+  const closeResults = () => {
+    results.classList.add('hidden');
+    input.setAttribute('aria-expanded', 'false');
+    setActiveOption(-1);
+  };
+
+  const updateResults = () => {
+    const query = normalize(input.value);
+    const rankedOptions = options
+      .map((option, originalIndex) => ({ option, originalIndex, score: getScore(option, query) }))
+      .filter(({ score }) => Number.isFinite(score))
+      .sort((first, second) => first.score - second.score || first.originalIndex - second.originalIndex);
+
+    visibleOptions = rankedOptions.map(({ option }) => option);
+    options.forEach((option) => option.classList.toggle('hidden', !visibleOptions.includes(option)));
+    visibleOptions.forEach((option) => results.insertBefore(option, emptyState));
+    emptyState?.classList.toggle('hidden', visibleOptions.length > 0);
+    results.classList.remove('hidden');
+    input.setAttribute('aria-expanded', 'true');
+    setActiveOption(-1);
+  };
+
+  input.addEventListener('focus', updateResults);
+  input.addEventListener('input', updateResults);
+
+  input.addEventListener('keydown', (event) => {
+    if (event.key === 'ArrowDown' || event.key === 'ArrowUp') {
+      event.preventDefault();
+      if (results.classList.contains('hidden')) updateResults();
+      const nextIndex = activeIndex < 0
+        ? (event.key === 'ArrowDown' ? 0 : visibleOptions.length - 1)
+        : activeIndex + (event.key === 'ArrowDown' ? 1 : -1);
+      setActiveOption(nextIndex < 0 ? visibleOptions.length - 1 : nextIndex);
+    } else if (event.key === 'Enter' && activeIndex >= 0) {
+      event.preventDefault();
+      window.location.href = visibleOptions[activeIndex].href;
+    } else if (event.key === 'Escape') {
+      closeResults();
+    }
+  });
+
+  document.addEventListener('click', (event) => {
+    if (!form.contains(event.target)) closeResults();
+  });
 
   form.addEventListener('submit', (event) => {
     const query = normalize(input.value);
     const match = options.find((option) => (
-      normalize(option.value) === query || normalize(option.dataset.slug || '') === query
+      normalize(option.dataset.name || '') === query || normalize(option.dataset.slug || '') === query
     ));
 
-    if (!match?.dataset.url) return;
+    if (!match?.href) return;
 
     event.preventDefault();
-    window.location.href = match.dataset.url;
+    window.location.href = match.href;
   });
 });
 
@@ -214,9 +303,8 @@ document.querySelectorAll('[data-location-map]').forEach((map) => {
       const isActive = pill.dataset.locationMapPill === id;
       pill.classList.toggle('bg-orange-accent', isActive);
       pill.classList.toggle('text-white', isActive);
-      pill.classList.toggle('bg-[#eeeeee]', !isActive);
+      pill.classList.toggle('bg-surface-200', !isActive);
       pill.classList.toggle('text-slate-900', !isActive);
-      pill.classList.toggle('hover:bg-slate-200', !isActive);
       pill.setAttribute('aria-selected', isActive ? 'true' : 'false');
     });
 
@@ -421,7 +509,7 @@ const initKantoorruimteMaps = () => {
         path: window.google.maps.SymbolPath.CIRCLE,
         fillColor: isActive ? '#f97316' : '#102335',
         fillOpacity: 1,
-        strokeColor: '#ffffff',
+        strokeColor: '#FCF8F3',
         strokeWeight: 3,
         scale: isActive ? 11 : 8,
       });
@@ -602,9 +690,9 @@ document.querySelectorAll('[data-community-video-tabs]').forEach((tabList) => {
       tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
       tab.classList.toggle('border-green-accent', isActive);
       tab.classList.toggle('shadow-[0_14px_30px_rgba(15,23,42,0.08)]', isActive);
-      tab.classList.toggle('bg-white', isActive);
+      tab.classList.toggle('bg-[#FCF8F3]', isActive);
       tab.classList.toggle('border-slate-200', !isActive);
-      tab.classList.toggle('bg-white/80', !isActive);
+      tab.classList.toggle('bg-[#FCF8F3]/80', !isActive);
 
       if (logo) {
         logo.classList.toggle('opacity-100', isActive);
@@ -803,10 +891,10 @@ document.querySelectorAll('[data-accordion]').forEach((accordion) => {
 
     item.classList.toggle('w-full', isOpen);
     item.classList.toggle('rounded-[0.75rem]', isOpen);
-    item.classList.toggle('bg-slate-900', isOpen);
+    item.classList.toggle('bg-dark-main', isOpen);
     item.classList.toggle('text-white', isOpen);
     item.classList.toggle('rounded-full', !isOpen);
-    item.classList.toggle('bg-[#e8e6e3]', !isOpen);
+    item.classList.toggle('bg-surface-200', !isOpen);
     item.classList.toggle('text-[#a4a4a4]', !isOpen);
 
     trigger.classList.toggle('w-full', isOpen);

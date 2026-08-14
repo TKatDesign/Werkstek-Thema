@@ -48,33 +48,33 @@ while (have_posts()) {
     ];
     ?>
 
-    <nav class="px-5 py-4 sm:px-6 lg:px-12" style="background-color: #F3F2F1;" aria-label="Breadcrumb">
-        <div class="lg:px-10 mx-auto flex max-w-[1440px] items-center gap-3 overflow-hidden text-sm font-medium text-slate-400">
+    <nav class="px-5 py-4 sm:px-6 lg:px-12" aria-label="Breadcrumb">
+        <div class="lg:px-10 mx-auto flex max-w-[1440px] items-center gap-3 overflow-hidden text-xs font-medium text-slate-400">
             <a href="<?php echo esc_url(home_url('/')); ?>" class="inline-flex h-6 w-6 shrink-0 items-center justify-center text-slate-700 transition hover:text-orange-accent">
                 <span class="sr-only">Home</span>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-2 stroke-text-dark">
                     <path d="m3 11 9-8 9 8"></path>
                     <path d="M5 10v10h14V10"></path>
                     <path d="M9 20v-6h6v6"></path>
                 </svg>
             </a>
             <span class="shrink-0" aria-hidden="true">&rsaquo;</span>
-            <a href="<?php echo esc_url($blog_archive_url); ?>" class="shrink-0 text-slate-900 transition hover:text-orange-accent">Blogs</a>
+            <a href="<?php echo esc_url($blog_archive_url); ?>" class="shrink-0 text-text-dark transition hover:text-orange-accent">Blogs</a>
             <span class="shrink-0" aria-hidden="true">&rsaquo;</span>
-            <span class="min-w-0 flex-1 truncate text-slate-400">
+            <span class="min-w-0 flex-1 truncate text-text-dark">
                 <?php echo esc_html($title); ?>
             </span>
         </div>
     </nav>
 
     <main>
-        <section class="bg-white pb-0 pt-14 lg:pt-24">
+        <section class="bg-surface pb-0 pt-8 lg:pt-24">
             <div class="mx-auto max-w-4xl px-5 sm:px-6">
                 <?php if ($primary_term instanceof WP_Term): ?>
                     <?php if ($term_url): ?>
-                        <a href="<?php echo esc_url($term_url); ?>" class="inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-slate-900 transition hover:-translate-y-0.5" style="background-color: #F3F2F1;">
+                        <a href="<?php echo esc_url($term_url); ?>" class="inline-flex min-h-8 items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-slate-900 transition hover:-translate-y-0.5 bg-surface-200">
                     <?php else: ?>
-                        <span class="inline-flex min-h-10 items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-slate-900" style="background-color: #F3F2F1;">
+                        <span class="inline-flex min-h-8 items-center gap-2 rounded-full px-4 py-2 text-xs font-semibold text-slate-900 bg-surface-200">
                     <?php endif; ?>
                             <?php if ($term_icon): ?>
                                 <img src="<?php echo esc_url($term_icon); ?>" alt="" class="h-4 w-4 object-contain" aria-hidden="true">
@@ -87,11 +87,11 @@ while (have_posts()) {
                     <?php endif; ?>
                 <?php endif; ?>
 
-                <h1 class="mt-8 max-w-3xl text-4xl font-bold leading-[1.05] text-slate-900 sm:text-5xl lg:text-[3.25rem]">
+                <h1 class="mt-4 max-w-3xl text-2xl font-bold text-slate-900 sm:text-5xl lg:text-[3.25rem]">
                     <?php echo esc_html($title); ?>
                 </h1>
 
-                <div class="mt-10 overflow-hidden rounded-[1.5rem] bg-slate-100 lg:mt-14" style="height: 450px;">
+                <div class="mt-10 h-[250px] max-h-[250px] overflow-hidden rounded-[1.5rem] bg-slate-100 sm:h-[450px] sm:max-h-none lg:mt-14">
                     <img
                         src="<?php echo esc_url($featured_image); ?>"
                         alt="<?php echo esc_attr($featured_image_alt); ?>"
@@ -133,7 +133,7 @@ while (have_posts()) {
         ?>
 
         <?php if (! empty($blog_components)): ?>
-            <section class="bg-white pb-16 lg:pb-4">
+            <section class="pb-16 lg:pb-4">
                 <div class="mx-auto max-w-4xl px-5 sm:px-6">
                     <?php foreach ($blog_components as $component): ?>
                         <?php
@@ -183,13 +183,13 @@ while (have_posts()) {
 
                             <div class="mx-auto max-w-3xl py-12 text-slate-900">
                                 <?php if ($paragraph_title): ?>
-                                    <h2 class="text-3xl font-bold leading-tight text-slate-900 sm:text-4xl">
+                                    <h2 class="text-2xl font-bold leading-tight text-slate-900 sm:text-4xl">
                                         <?php echo esc_html($paragraph_title); ?>
                                     </h2>
                                 <?php endif; ?>
 
                                 <?php if ($paragraph_text): ?>
-                                    <div class="<?php echo $paragraph_title ? 'mt-5' : ''; ?> max-w-none text-lg font-medium leading-8 text-slate-900">
+                                    <div class="<?php echo $paragraph_title ? 'mt-5' : ''; ?> max-w-none text-sm lg:text-lg lg:leading-9 font-medium leading-7 text-slate-900">
                                         <?php echo wp_kses_post(wpautop($paragraph_text)); ?>
                                     </div>
                                 <?php endif; ?>
@@ -197,7 +197,7 @@ while (have_posts()) {
                         <?php endif; ?>
 
                         <?php if (in_array($normalized_layout, ['cta_blok', 'cta_block'], true)): ?>
-                            <div class="my-10 overflow-hidden rounded-[1.25rem] lg:my-14" style="background-color: #F3F2F1;">
+                            <div class="my-2 overflow-hidden rounded-[1.25rem] lg:my-14 bg-surface-200">
                                 <div class="grid items-end gap-8 lg:grid-cols-2 lg:gap-10">
                                     <div style="padding: 48px 0 48px 48px;">
                                         <h2 class="max-w-md text-3xl font-bold leading-[1.05] text-slate-900 sm:text-[40px]">
@@ -225,7 +225,7 @@ while (have_posts()) {
 
                                         <a href="<?php echo esc_url($kantoorruimte_archive_url); ?>" class="mt-7 inline-flex items-center gap-4 rounded-full bg-slate-900 py-2 pl-6 pr-2 text-base font-medium text-white transition hover:bg-slate-800">
                                             <span>Vind kantoorruimte</span>
-                                            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-green-accent text-white">
+                                            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-orange-accent text-white">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
                                                     <path d="M5 12h14"></path>
                                                     <path d="m12 5 7 7-7 7"></path>
@@ -248,7 +248,7 @@ while (have_posts()) {
                         <?php endif; ?>
 
                         <?php if (in_array($normalized_layout, ['cta_blok_2', 'cta_block_2'], true)): ?>
-                            <div class="my-10 overflow-hidden rounded-[1.25rem] lg:my-14" style="background-color: #F3F2F1;">
+                            <div class="my-10 overflow-hidden rounded-[1.25rem] lg:my-14 bg-surface-200">
                                 <div class="grid items-end gap-8 lg:grid-cols-2 lg:gap-10">
                                     <div style="padding: 48px 0 48px 48px;">
                                         <h2 class="max-w-md text-3xl font-bold leading-[1.05] text-slate-900 sm:text-[40px]">
@@ -276,7 +276,7 @@ while (have_posts()) {
 
                                         <a href="<?php echo esc_url($kantoorruimte_archive_url); ?>" class="mt-7 inline-flex items-center gap-4 rounded-full bg-slate-900 py-2 pl-6 pr-2 text-base font-medium text-white transition hover:bg-slate-800">
                                             <span>Vind kantoorruimte</span>
-                                            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-green-accent text-white">
+                                            <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-orange-accent text-white">
                                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
                                                     <path d="M5 12h14"></path>
                                                     <path d="m12 5 7 7-7 7"></path>
@@ -302,7 +302,7 @@ while (have_posts()) {
             </section>
         <?php endif; ?>
 
-        <section class="bg-white pb-16 lg:pb-24">
+        <section class="pb-16 lg:pb-24">
             <div class="mx-auto max-w-4xl px-5 sm:px-6">
                 <div class="flex flex-wrap items-center gap-3 py-8">
                     <span class="mr-1 text-lg font-bold text-slate-900">Delen</span>
@@ -312,7 +312,7 @@ while (have_posts()) {
                             href="<?php echo esc_url($share_link['url']); ?>"
                             target="_blank"
                             rel="noopener noreferrer"
-                            class="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-900 transition hover:border-slate-300 hover:bg-slate-50"
+                            class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface-200 text-slate-900 transition hover:bg-white"
                             aria-label="<?php echo esc_attr($share_link['label']); ?> delen"
                         >
                             <img
@@ -348,7 +348,7 @@ while (have_posts()) {
                                         >
 
                                         <?php if (! empty($blog['term'])): ?>
-                                            <span class="absolute left-5 top-5 inline-flex min-h-10 items-center gap-2 rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-900 shadow-[0_12px_28px_rgba(15,23,42,0.12)]">
+                                            <span class="absolute left-5 top-5 inline-flex min-h-10 items-center gap-2 rounded-full bg-dark-main px-4 py-2 text-sm font-semibold text-white shadow-[0_12px_28px_rgba(15,23,42,0.12)]">
                                                 <?php if (! empty($blog['term']['icon'])): ?>
                                                     <img
                                                         src="<?php echo esc_url($blog['term']['icon']); ?>"
@@ -370,7 +370,7 @@ while (have_posts()) {
                                 <?php if (! empty($blog['tags'])): ?>
                                     <div class="mt-4 flex flex-wrap gap-2">
                                         <?php foreach ($blog['tags'] as $tag): ?>
-                                            <span class="inline-flex rounded-full bg-[#eeeeee] px-4 py-2 text-base font-medium leading-none text-slate-900">
+                                            <span class="inline-flex rounded-full bg-surface-200 px-4 py-2 text-base font-medium leading-none text-slate-900">
                                                 <?php echo esc_html($tag); ?>
                                             </span>
                                         <?php endforeach; ?>

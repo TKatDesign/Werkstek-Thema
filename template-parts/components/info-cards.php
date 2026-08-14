@@ -62,7 +62,7 @@ if (count($items) === 2) {
                         <div class="absolute inset-0 bg-gradient-to-t from-slate-900/15 via-transparent to-transparent"></div>
                     </div>
 
-                    <div class="absolute inset-x-4 bottom-4 rounded-[1.75rem] bg-white p-6 shadow-[0_14px_30px_rgba(15,23,42,0.08)] lg:inset-x-5 lg:bottom-5 lg:p-7">
+                    <div class="absolute inset-x-4 bottom-4 rounded-[1.75rem] bg-surface-200 p-6 shadow-[0_14px_30px_rgba(15,23,42,0.08)] lg:inset-x-5 lg:bottom-5 lg:p-7">
                         <h3 class="text-[1.7rem] font-bold leading-tight text-slate-900">
                             <?php echo esc_html($item['title']); ?>
                         </h3>

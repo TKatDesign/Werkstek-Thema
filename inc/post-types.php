@@ -356,7 +356,7 @@ add_action('admin_head-term.php', 'werkstek_hide_default_locatie_description_fie
 
 function werkstek_get_kantoorruimte_card_data($post_id) {
     $default_image = get_template_directory_uri() . '/resources/images/large.webp';
-    $price_label = function_exists('get_field') ? get_field('prijs_label', $post_id) : get_post_meta($post_id, 'prijs_label', true);
+    $price_label = werkstek_get_post_field_value($post_id, ['prijs_label', 'prijs', 'price']);
     $status_label = function_exists('get_field') ? get_field('status_label', $post_id) : get_post_meta($post_id, 'status_label', true);
     $popular_field = function_exists('get_field') ? get_field('populair', $post_id) : get_post_meta($post_id, 'populair', true);
     $address = werkstek_get_post_field_value($post_id, ['adres', 'address']);
@@ -706,18 +706,26 @@ function werkstek_get_locatie_card_data($term) {
     ];
 }
 
-function werkstek_get_youtube_embed_url($url) {
-    if (! is_string($url) || $url === '') {
+function werkstek_get_youtube_video_id($value) {
+    if (! is_string($value) || trim($value) === '') {
         return '';
     }
 
-    $url = trim($url);
+    $value = html_entity_decode(trim($value), ENT_QUOTES, 'UTF-8');
 
-    if (! preg_match('#^https?://#i', $url)) {
-        $url = 'https://' . ltrim($url, '/');
+    if (preg_match('/^[a-zA-Z0-9_-]{11}$/', $value)) {
+        return $value;
     }
 
-    $parts = wp_parse_url($url);
+    if (preg_match('#<iframe[^>]+src=["\']([^"\']+)["\']#i', $value, $matches)) {
+        $value = $matches[1];
+    }
+
+    if (! preg_match('#^https?://#i', $value)) {
+        $value = 'https://' . ltrim($value, '/');
+    }
+
+    $parts = wp_parse_url($value);
     $host = strtolower($parts['host'] ?? '');
     $host = preg_replace('/^www\./', '', $host);
     $path = trim($parts['path'] ?? '', '/');
@@ -729,16 +737,20 @@ function werkstek_get_youtube_embed_url($url) {
         if ($path === 'watch') {
             parse_str($parts['query'] ?? '', $query);
             $video_id = $query['v'] ?? '';
-        } elseif (preg_match('#^(?:embed|shorts|live)/([^/]+)#', $path, $matches)) {
+        } elseif (preg_match('#^(?:embed|shorts|live|v)/([^/]+)#', $path, $matches)) {
             $video_id = $matches[1];
         }
     }
 
-    if (! preg_match('/^[a-zA-Z0-9_-]{11}$/', $video_id)) {
-        return '';
-    }
+    return preg_match('/^[a-zA-Z0-9_-]{11}$/', $video_id) ? $video_id : '';
+}
 
-    return 'https://www.youtube-nocookie.com/embed/' . rawurlencode($video_id) . '?rel=0&playsinline=1';
+function werkstek_get_youtube_embed_url($value) {
+    $video_id = werkstek_get_youtube_video_id($value);
+
+    return $video_id
+        ? 'https://www.youtube-nocookie.com/embed/' . rawurlencode($video_id) . '?rel=0&playsinline=1'
+        : '';
 }
 
 function werkstek_get_community_video_data($post_id) {
@@ -765,14 +777,40 @@ function werkstek_get_community_video_data($post_id) {
     } elseif (is_string($video) && $video !== '') {
         $video = trim($video);
 
-        if (preg_match('#<iframe|<video#i', $video)) {
-            $video_embed = $video;
+        $youtube_embed_url = werkstek_get_youtube_embed_url($video);
+
+        if ($youtube_embed_url) {
+            $video_url = $video;
+            $video_type = 'youtube';
+        } elseif (preg_match('#<iframe|<video#i', $video)) {
+            $video_embed = wp_kses($video, [
+                'iframe' => [
+                    'src' => true,
+                    'title' => true,
+                    'width' => true,
+                    'height' => true,
+                    'allow' => true,
+                    'allowfullscreen' => true,
+                    'loading' => true,
+                    'referrerpolicy' => true,
+                    'frameborder' => true,
+                ],
+                'video' => [
+                    'src' => true,
+                    'controls' => true,
+                    'poster' => true,
+                    'preload' => true,
+                ],
+                'source' => [
+                    'src' => true,
+                    'type' => true,
+                ],
+            ]);
             $video_type = 'embed';
         } else {
-            $video_url = $video;
-            $youtube_embed_url = werkstek_get_youtube_embed_url($video_url);
+            $video_url = esc_url_raw($video);
             $extension = strtolower(pathinfo(wp_parse_url($video, PHP_URL_PATH) ?: '', PATHINFO_EXTENSION));
-            $video_type = $youtube_embed_url ? 'youtube' : (in_array($extension, ['mp4', 'webm', 'ogg', 'mov'], true) ? 'file' : 'url');
+            $video_type = in_array($extension, ['mp4', 'webm', 'ogg', 'mov'], true) ? 'file' : 'url';
         }
     }
 
@@ -1028,7 +1066,7 @@ function werkstek_blog_categorie_edit_icon_field($term) {
             <input type="hidden" id="blog-categorie-icoon" name="icoon" value="<?php echo esc_attr($icon_id); ?>">
             <div id="blog-categorie-icoon-preview" style="margin-bottom:12px;">
                 <?php if ($icon_url): ?>
-                    <img src="<?php echo esc_url($icon_url); ?>" alt="" style="width:40px;height:40px;object-fit:contain;border-radius:9999px;background:#fff;box-shadow:0 8px 18px rgba(15,23,42,0.12);padding:8px;">
+                    <img src="<?php echo esc_url($icon_url); ?>" alt="" style="width:40px;height:40px;object-fit:contain;border-radius:9999px;background: #FCF8F3;box-shadow:0 8px 18px rgba(15,23,42,0.12);padding:8px;">
                 <?php endif; ?>
             </div>
             <button type="button" class="button" data-blog-category-icon-upload>
@@ -1084,7 +1122,7 @@ function werkstek_enqueue_blog_categorie_admin_media($hook_suffix) {
 
             const renderPreview = (attachment) => {
                 iconField.value = attachment.id;
-                preview.innerHTML = '<img src=\"' + attachment.url + '\" alt=\"\" style=\"width:40px;height:40px;object-fit:contain;border-radius:9999px;background:#fff;box-shadow:0 8px 18px rgba(15,23,42,0.12);padding:8px;\">';
+                preview.innerHTML = '<img src=\"' + attachment.url + '\" alt=\"\" style=\"width:40px;height:40px;object-fit:contain;border-radius:9999px;background: #FCF8F3;box-shadow:0 8px 18px rgba(15,23,42,0.12);padding:8px;\">';
                 removeButton.style.display = 'inline-block';
             };
 
@@ -1155,6 +1193,34 @@ function werkstek_kantoorruimte_rewrite_rules($rules) {
 }
 add_filter('rewrite_rules_array', 'werkstek_kantoorruimte_rewrite_rules');
 
+function werkstek_verify_recaptcha_response($token) {
+    if (! defined('WERKSTEK_RECAPTCHA_SECRET_KEY') || WERKSTEK_RECAPTCHA_SECRET_KEY === '' || $token === '') {
+        return false;
+    }
+
+    $request_body = [
+        'secret' => WERKSTEK_RECAPTCHA_SECRET_KEY,
+        'response' => $token,
+    ];
+
+    if (! empty($_SERVER['REMOTE_ADDR'])) {
+        $request_body['remoteip'] = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR']));
+    }
+
+    $response = wp_remote_post('https://www.google.com/recaptcha/api/siteverify', [
+        'timeout' => 10,
+        'body' => $request_body,
+    ]);
+
+    if (is_wp_error($response) || wp_remote_retrieve_response_code($response) !== 200) {
+        return false;
+    }
+
+    $result = json_decode(wp_remote_retrieve_body($response), true);
+
+    return is_array($result) && ! empty($result['success']);
+}
+
 function werkstek_handle_rondleiding_aanvraag() {
     $post_id = isset($_POST['kantoorruimte_id']) ? absint($_POST['kantoorruimte_id']) : 0;
     $return_url = $post_id ? get_permalink($post_id) : home_url('/');
@@ -1172,11 +1238,21 @@ function werkstek_handle_rondleiding_aanvraag() {
         exit;
     }
 
+    $recaptcha_token = isset($_POST['g-recaptcha-response'])
+        ? sanitize_text_field(wp_unslash($_POST['g-recaptcha-response']))
+        : '';
+
+    if (! werkstek_verify_recaptcha_response($recaptcha_token)) {
+        wp_safe_redirect(add_query_arg('rondleiding', 'captcha-error', $return_url));
+        exit;
+    }
+
     $name = isset($_POST['naam']) ? sanitize_text_field(wp_unslash($_POST['naam'])) : '';
     $email = isset($_POST['emailadres']) ? sanitize_email(wp_unslash($_POST['emailadres'])) : '';
     $phone = isset($_POST['telefoonnummer']) ? sanitize_text_field(wp_unslash($_POST['telefoonnummer'])) : '';
+    $privacy_accepted = isset($_POST['privacy_akkoord']) && wp_unslash($_POST['privacy_akkoord']) === '1';
 
-    if ($name === '' || $email === '' || ! is_email($email) || $phone === '') {
+    if ($name === '' || $email === '' || ! is_email($email) || $phone === '' || ! $privacy_accepted) {
         wp_safe_redirect(add_query_arg('rondleiding', 'error', $return_url));
         exit;
     }
@@ -1193,6 +1269,8 @@ function werkstek_handle_rondleiding_aanvraag() {
             'kantoorruimte_id' => $post_id,
             'kantoorruimte_titel' => $kantoorruimte_title,
             'kantoorruimte_url' => get_permalink($post_id),
+            'privacy_akkoord' => '1',
+            'privacy_akkoord_op' => current_time('mysql'),
         ],
     ], true);
 

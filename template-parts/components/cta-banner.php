@@ -24,7 +24,7 @@ $mail_icon = $theme_uri . '/resources/images/solar_letter-outline.svg';
                 href="tel:0850290598"
                 class="inline-flex min-h-14 items-center gap-4 rounded-full bg-slate-900 py-2 pl-2 pr-7 text-base font-medium text-white transition hover:bg-slate-800"
             >
-                <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-green-accent">
+                <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-orange-accent">
                     <img src="<?php echo esc_url($phone_icon); ?>" alt="" class="h-6 w-6 brightness-0 invert" aria-hidden="true">
                 </span>
                 <span>085 0290 598</span>
@@ -32,9 +32,9 @@ $mail_icon = $theme_uri . '/resources/images/solar_letter-outline.svg';
 
             <a
                 href="mailto:info@werkstek.nl"
-                class="inline-flex min-h-14 items-center gap-4 rounded-full bg-[#e8e6e3] py-2 pl-2 pr-7 text-base font-medium text-slate-900 transition hover:bg-slate-200"
+                class="inline-flex min-h-14 items-center gap-4 rounded-full bg-surface-200 py-2 pl-2 pr-7 text-base font-medium text-slate-900 transition hover:bg-white"
             >
-                <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-white">
+                <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-surface">
                     <img src="<?php echo esc_url($mail_icon); ?>" alt="" class="h-6 w-6" aria-hidden="true">
                 </span>
                 <span>info@werkstek.nl</span>

@@ -62,7 +62,7 @@ $default_active_index = count($community_videos) > 1 ? 1 : 0;
                     id="<?php echo esc_attr($component_id . '-tab-' . $video['id']); ?>"
                     data-community-video-tab
                     data-panel-id="<?php echo esc_attr($component_id . '-panel-' . $video['id']); ?>"
-                    class="<?php echo $is_active ? 'border-green-accent bg-white shadow-[0_14px_30px_rgba(15,23,42,0.08)]' : 'border-slate-200 bg-white/80'; ?> inline-flex h-20 min-w-[110px] items-center justify-center rounded-[1.5rem] border px-6 transition hover:border-accent-green hover:bg-white hover:shadow-[0_14px_30px_rgba(15,23,42,0.08)]"
+                    class="<?php echo $is_active ? 'border-green-accent bg-[#FCF8F3]' : 'border-surface bg-[#FCF8F3]/80'; ?> inline-flex h-20 min-w-[110px] items-center justify-center rounded-[1.5rem] border px-6 transition hover:border-accent-green hover:bg-[#FCF8F3]"
                     role="tab"
                     aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
                     aria-controls="<?php echo esc_attr($component_id . '-panel-' . $video['id']); ?>"
@@ -135,10 +135,10 @@ $default_active_index = count($community_videos) > 1 ? 1 : 0;
                     href="<?php echo esc_url($button_url); ?>"
                     target="<?php echo esc_attr($button_target); ?>"
                     rel="<?php echo $button_target === '_blank' ? 'noopener noreferrer' : ''; ?>"
-                    class="inline-flex items-center gap-3 rounded-full bg-light-gray px-6 py-2.5 pr-3 text-base font-medium text-slate-900 transition hover:bg-slate-200"
+                    class="inline-flex items-center gap-3 rounded-full bg-dark-main px-6 py-2.5 pr-3 text-base font-medium text-white transition hover:bg-orange-accent"
                 >
                     <span><?php echo esc_html($button_tekst); ?></span>
-                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-white text-slate-900 shadow-sm">
+                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FCF8F3] text-dark-main shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-2">
                             <path d="M7 17 17 7"></path>
                             <path d="M9 7h8v8"></path>

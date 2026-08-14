@@ -16,7 +16,7 @@ $phone_href = $telefoonnummer ? 'tel:' . preg_replace('/[^0-9+]/', '', $telefoon
 $email_href = $emailadres ? 'mailto:' . sanitize_email($emailadres) : '';
 ?>
 
-<section class="bg-white py-8 lg:py-14">
+<section class="mt-8">
     <div class="mx-auto max-w-[1440px] px-5 sm:px-6 lg:px-12">
         <div class="relative lg:pb-16">
             <div class="relative overflow-hidden rounded-[1.25rem] bg-slate-900">
@@ -35,13 +35,13 @@ $email_href = $emailadres ? 'mailto:' . sanitize_email($emailadres) : '';
 
                 <div
                     class="absolute inset-0"
-                    style="background: linear-gradient(to top, rgba(15, 41, 58, 1) 0%, rgba(15, 41, 58, 0.4) 100%);"
+                    style="background: linear-gradient(to bottom, rgba(76, 60, 45, 0.3) 0%, #392E22 100%);"
                     aria-hidden="true"
                 ></div>
 
                 <div class="relative z-10 mx-auto flex min-h-[520px] max-w-3xl flex-col items-center justify-center px-5 pb-32 pt-20 text-center text-white sm:px-8 lg:min-h-[520px] lg:pb-32">
                     <?php if ($subtitel): ?>
-                        <span class="inline-flex rounded-full bg-green-accent px-4 py-2 text-sm font-regular leading-none text-white">
+                        <span class="inline-flex rounded-full bg-orange-accent px-4 py-2 text-sm font-regular leading-none text-white">
                             <?php echo esc_html($subtitel); ?>
                         </span>
                     <?php endif; ?>
@@ -61,24 +61,24 @@ $email_href = $emailadres ? 'mailto:' . sanitize_email($emailadres) : '';
             <?php if ($telefoonnummer || $emailadres): ?>
                 <div class="relative z-20 mx-auto -mt-16 grid max-w-4xl gap-5 px-5 sm:px-8 lg:absolute lg:inset-x-0 lg:bottom-0 lg:mt-0 lg:grid-cols-2">
                     <?php if ($telefoonnummer): ?>
-                        <a href="<?php echo esc_url($phone_href); ?>" class="group flex min-h-[102px] lg:min-h-[130px] items-center gap-5 rounded-[1.25rem] border border-slate-200 bg-white p-5 lg:p-8 text-slate-900 shadow-[0_18px_40px_rgba(15,23,42,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_50px_rgba(15,23,42,0.16)]">
-                            <span class="inline-flex h-12 w-12 lg:h-16 lg:w-16 shrink-0 items-center justify-center rounded-full bg-[#f3f2f1]">
+                        <a href="<?php echo esc_url($phone_href); ?>" class="group flex min-h-[102px] lg:min-h-[130px] items-center gap-5 rounded-[1.25rem] bg-surface-200 p-5 lg:p-8 text-slate-900 transition hover:-translate-y-0.5 hover:shadow-[0_24px_50px_rgba(15,23,42,0.16)]">
+                            <span class="inline-flex h-12 w-12 lg:h-16 lg:w-16 shrink-0 items-center justify-center rounded-full bg-surface-200">
                                 <img src="<?php echo esc_url($phone_icon_url); ?>" alt="" class="h-5 w-5 lg:h-7 lg:w-7 object-contain" aria-hidden="true">
                             </span>
                             <span>
-                                <span class="block text-lg lg:text-[20px] font-medium leading-none text-slate-400">Bellen</span>
+                                <span class="block text-lg lg:text-[20px] font-medium leading-none text-text-dark">Bellen</span>
                                 <span class="mt-2 block text-lg lg:text-2xl font-bold leading-tight text-slate-900"><?php echo esc_html($telefoonnummer); ?></span>
                             </span>
                         </a>
                     <?php endif; ?>
 
                     <?php if ($emailadres): ?>
-                        <a href="<?php echo esc_url($email_href); ?>" class="group flex min-h-[102px] lg:min-h-[130px] items-center gap-5 rounded-[1.25rem] border border-slate-200 bg-white p-5 lg:p-8 text-slate-900 shadow-[0_18px_40px_rgba(15,23,42,0.12)] transition hover:-translate-y-0.5 hover:shadow-[0_24px_50px_rgba(15,23,42,0.16)]">
-                            <span class="inline-flex h-12 w-12 lg:h-16 lg:w-16 shrink-0 items-center justify-center rounded-full bg-[#f3f2f1]">
+                        <a href="<?php echo esc_url($email_href); ?>" class="group flex min-h-[102px] lg:min-h-[130px] items-center gap-5 rounded-[1.25rem] bg-surface-200 p-5 lg:p-8 text-slate-900 transition hover:-translate-y-0.5 hover:shadow-[0_24px_50px_rgba(15,23,42,0.16)]">
+                            <span class="inline-flex h-12 w-12 lg:h-16 lg:w-16 shrink-0 items-center justify-center rounded-full bg-surface-200">
                                 <img src="<?php echo esc_url($mail_icon_url); ?>" alt="" class="h-5 w-5 lg:h-7 lg:w-7 object-contain" aria-hidden="true">
                             </span>
                             <span>
-                                <span class="block text-lg lg:text-[20px] font-medium leading-none text-slate-400">Mailen</span>
+                                <span class="block text-lg lg:text-[20px] font-medium leading-none text-text-dark">Mailen</span>
                                 <span class="mt-2 block break-all text-lg lg:text-2xl font-bold leading-tight text-slate-900"><?php echo esc_html($emailadres); ?></span>
                             </span>
                         </a>

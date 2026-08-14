@@ -34,24 +34,21 @@ if ($kantoorruimtes_query->have_posts()) {
 }
 ?>
 
-<section class="py-14 lg:py-24">
-    <div class="mx-auto max-w-7xl px-5 sm:px-6">
+<section class="py-16 sm:py-20 lg:py-24">
+    <div class="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-16">
         <div class="mx-auto max-w-3xl text-center">
-            <div class="mx-auto flex h-14 w-14 items-center justify-center text-orange-500">
-                <img src="<?php bloginfo( 'template_url' ) ?>/resources/images/branding/werkstek-icon-01.png" alt="">
-            </div>
-            <h2 class="mt-5 text-4xl font-bold text-slate-900 sm:text-5xl">
+            <h2 class="text-[2.5rem] font-bold leading-tight text-dark-main sm:text-5xl lg:text-[3rem]">
                 <?php echo esc_html($sectie_titel); ?>
             </h2>
         </div>
 
-        <div class="mt-10 lg:mt-14">
+        <div class="mt-14 lg:mt-8">
             <div class="relative">
                 <button
                     type="button"
                     data-slider-prev="kantoorruimtes-slider"
                     aria-label="Vorige kantoorruimte"
-                    class="hidden lg:inline-flex absolute left-0 top-[9.75rem] z-10 h-12 w-12 -translate-x-1/2 -translate-y-10 items-center justify-center rounded-full bg-slate-900 text-white shadow-[0_16px_30px_rgba(15,23,42,0.16)] transition hover:bg-slate-800"
+                    class="hidden lg:inline-flex absolute left-0 top-[8.5rem] z-10 h-16 w-16 -translate-x-1/2 items-center justify-center rounded-full border border-[#e6d9cd] bg-[#FCF8F3] text-slate-800 shadow-sm transition hover:bg-white disabled:pointer-events-none disabled:opacity-40"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
                         <path d="m15 18-6-6 6-6"></path>
@@ -62,66 +59,61 @@ if ($kantoorruimtes_query->have_posts()) {
                     <div
                         id="kantoorruimtes-slider"
                         data-slider
-                        class="no-scrollbar flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth pb-2 lg:gap-6"
+                        class="no-scrollbar -mx-5 flex snap-x snap-mandatory gap-5 overflow-x-auto px-[7vw] pb-2 scroll-smooth sm:-mx-8 sm:px-[calc((100vw-420px)/2)] lg:mx-0 lg:gap-8 lg:px-0"
                     >
                         <?php foreach ($kantoorruimtes as $ruimte): ?>
-                            <article class="min-w-[82%] snap-start sm:min-w-[420px] lg:min-w-[calc((100%-3rem)/3)] lg:flex-1">
-                                <a href="<?php echo esc_url($ruimte['url']); ?>" class="group block">
-                                    <div
-                                        class="relative min-h-[250px] overflow-hidden rounded-[1.75rem] bg-slate-200 shadow-[0_20px_45px_rgba(15,23,42,0.08)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_28px_60px_rgba(15,23,42,0.14)] lg:min-h-[255px]"
-                                        style="
-                                            background-image:
-                                                linear-gradient(to top, rgba(15, 23, 42, 0.1), rgba(15, 23, 42, 0.02)),
-                                                url('<?php echo esc_url($ruimte['image']); ?>');
-                                            background-size: cover;
-                                            <?php echo esc_attr($ruimte['position']); ?>
-                                        "
-                                    >
-                                        <?php if ($ruimte['is_new']): ?>
-                                            <span class="absolute left-4 top-4 inline-flex rounded-full bg-yellow-300 px-4 py-1.5 text-sm font-semibold text-slate-900">
-                                                Nieuw
-                                            </span>
-                                        <?php endif; ?>
+                            <?php
+                            $card_location = $ruimte['address'] ?: $ruimte['title'];
+                            $card_price = preg_replace('/^vanaf\s*/i', '', (string) $ruimte['price']);
+                            $show_new_label = $ruimte['is_new'] || strtolower(trim((string) $ruimte['availability'])) === 'nieuw';
 
-                                        <span class="absolute bottom-4 right-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm transition group-hover:scale-105 group-hover:text-orange-500">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
-                                                <path d="M7 17 17 7"></path>
-                                                <path d="M9 7h8v8"></path>
-                                            </svg>
-                                        </span>
-                                    </div>
+                            if ($card_price !== '' && strpos($card_price, '€') === false && preg_match('/^\d/', $card_price)) {
+                                $card_price = '€' . $card_price;
+                            }
 
-                                    <div class="pt-4">
-                                        <div class="flex items-center gap-2 text-base font-medium text-slate-600">
-                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 shrink-0 fill-none stroke-current stroke-2 text-slate-400">
-                                                <path d="M12 21s6-4.35 6-10a6 6 0 1 0-12 0c0 5.65 6 10 6 10Z"></path>
-                                                <circle cx="12" cy="11" r="2.5"></circle>
-                                            </svg>
-                                            <span><?php echo esc_html($ruimte['title']); ?></span>
+                            if ($ruimte['location'] && stripos($card_location, $ruimte['location']) === false) {
+                                $card_location .= ', ' . $ruimte['location'];
+                            }
+                            ?>
+                            <article class="min-w-[86vw] snap-center sm:min-w-[420px] lg:min-w-[calc((100%_-_4rem)/3)] lg:snap-start lg:flex-1">
+                                <a href="<?php echo esc_url($ruimte['url']); ?>" class="group block overflow-hidden rounded-[1.75rem] bg-[#FCF8F3] transition duration-300 hover:-translate-y-1">
+                                        <div class="relative h-[255px] overflow-hidden sm:h-[250px] lg:h-[250px]">
+                                            <img src="<?php echo esc_url($ruimte['image']); ?>" alt="<?php echo esc_attr($ruimte['title']); ?>" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+
+                                            <?php if ($show_new_label): ?>
+                                                <span class="absolute left-5 top-5 inline-flex rounded-full bg-[#fff000] px-4 py-2 text-base font-semibold text-slate-900">
+                                                    Nieuw
+                                                </span>
+                                            <?php endif; ?>
                                         </div>
 
-                                        <?php if ($ruimte['price'] || $ruimte['availability']): ?>
-                                            <div class="mt-4 flex flex-wrap items-center gap-3">
+                                        <div class="px-6 py-7 sm:px-8">
+                                            <div class="flex items-center gap-1 text-base font-bold text-slate-800 sm:text-base">
+                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 flex-none fill-none stroke-current stroke-[1.7] text-slate-600" aria-hidden="true">
+                                                    <path d="M12 21s6-4.35 6-10a6 6 0 1 0-12 0c0 5.65 6 10 6 10Z"></path>
+                                                    <circle cx="12" cy="11" r="2.5"></circle>
+                                                </svg>
+                                                <span class="truncate"><?php echo esc_html($card_location); ?></span>
+                                            </div>
+
+                                            <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-base font-medium text-slate-400">
                                                 <?php if ($ruimte['price']): ?>
-                                                    <span class="inline-flex rounded-full bg-green-accent px-4 py-1.5 text-sm font-semibold text-white">
-                                                        Vanaf €<?php echo esc_html($ruimte['price']); ?>
+                                                    <span>
+                                                        Vanaf <span class="text-[#fc6321]"><?php echo esc_html($card_price); ?></span>
                                                     </span>
                                                 <?php endif; ?>
 
-                                                <?php if ($ruimte['availability']): ?>
-                                                    <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-sm font-medium text-slate-600">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-2 text-slate-400">
-                                                            <rect x="3.5" y="5.5" width="17" height="15" rx="2"></rect>
-                                                            <path d="M7 3.5v4"></path>
-                                                            <path d="M17 3.5v4"></path>
-                                                            <path d="M3.5 9.5h17"></path>
-                                                        </svg>
-                                                        <span><?php echo esc_html($ruimte['availability']); ?></span>
+                                                <?php if ($ruimte['price'] && $ruimte['surface']): ?>
+                                                    <span aria-hidden="true">•</span>
+                                                <?php endif; ?>
+
+                                                <?php if ($ruimte['surface']): ?>
+                                                    <span>
+                                                        <?php echo esc_html(preg_match('/^\d+$/', $ruimte['surface']) ? $ruimte['surface'] . 'm²' : $ruimte['surface']); ?>
                                                     </span>
                                                 <?php endif; ?>
                                             </div>
-                                        <?php endif; ?>
-                                    </div>
+                                        </div>
                                 </a>
                             </article>
                         <?php endforeach; ?>
@@ -136,7 +128,7 @@ if ($kantoorruimtes_query->have_posts()) {
                     type="button"
                     data-slider-next="kantoorruimtes-slider"
                     aria-label="Volgende kantoorruimte"
-                    class="hidden lg:inline-flex absolute right-0 top-[9.75rem] z-10 h-12 w-12 translate-x-1/2 -translate-y-10 items-center justify-center rounded-full bg-slate-900 text-white shadow-[0_16px_30px_rgba(15,23,42,0.16)] transition hover:bg-slate-800"
+                    class="hidden lg:inline-flex absolute right-0 top-[8.5rem] z-10 h-16 w-16 translate-x-1/2 items-center justify-center rounded-full border border-[#e6d9cd] bg-[#FCF8F3] text-slate-800 shadow-sm transition hover:bg-white disabled:pointer-events-none disabled:opacity-40"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
                         <path d="m9 6 6 6-6 6"></path>
@@ -144,15 +136,15 @@ if ($kantoorruimtes_query->have_posts()) {
                 </button>
             </div>
 
-            <div class="mt-10 flex justify-center">
+            <div class="mt-12 flex justify-center lg:mt-16">
                 <a
                     href="<?php echo esc_url($button_url); ?>"
                     target="<?php echo esc_attr($button_target); ?>"
                     rel="<?php echo $button_target === '_blank' ? 'noopener noreferrer' : ''; ?>"
-                    class="inline-flex items-center gap-3 rounded-full bg-slate-900 px-6 pr-3 py-2.5 text-base font-medium text-white transition hover:bg-slate-800"
+                    class="group inline-flex items-center gap-4 rounded-full bg-dark-main py-2 pl-7 pr-2 text-base font-medium text-white transition hover:bg-orange-accent"
                 >
                     <span><?php echo esc_html($button_tekst); ?></span>
-                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-white">
+                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FCF8F3] text-dark-main shadow-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-2">
                             <path d="M7 17 17 7"></path>
                             <path d="M9 7h8v8"></path>

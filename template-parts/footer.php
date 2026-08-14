@@ -1,6 +1,6 @@
 <?php
 $site_name = get_bloginfo('name') ?: 'Werkstek';
-$skyline_banner = get_template_directory_uri() . '/resources/images/skyline-banner.png';
+$skyline_banner = get_template_directory_uri() . '/resources/images/landscape.svg';
 $footer_logo = get_template_directory_uri() . '/resources/images/branding/werkstek-logo.png';
 $steden = ['Amsterdam', 'Den haag', 'Rotterdam', 'Utrecht', 'Haarlem'];
 $stekjes = ['Computerweg 1', 'Het Ravelijn 50', 'Papiermolen 26', 'Databankweg 20', 'Simon Stevinweg 27'];
@@ -18,8 +18,8 @@ $socials = [
 ];
 ?>
 
-<footer class="relative mt-20 bg-[#F5F1E5] text-slate-900">
-    <div class="pointer-events-none relative z-10 h-32 overflow-hidden bg-white">
+<footer class="relative mt-20 bg-[#EDD1B5] text-slate-900">
+    <div class="pointer-events-none relative z-10 h-32 overflow-hidden bg-surface">
         <img src="<?php echo esc_url($skyline_banner); ?>" alt="" class="block h-full w-full translate-y-[2px] object-cover object-bottom" aria-hidden="true">
     </div>
 
@@ -74,7 +74,7 @@ $socials = [
                         <a
                             href="<?php echo esc_url($url); ?>"
                             aria-label="<?php echo esc_attr($platform); ?>"
-                            class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-900 shadow-[0_10px_24px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:text-orange-500"
+                            class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface text-slate-900 transition hover:-translate-y-0.5 hover:text-orange-500"
                         >
                             <?php if ($platform === 'Instagram'): ?>
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">

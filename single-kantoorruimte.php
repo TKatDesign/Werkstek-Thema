@@ -1,4 +1,6 @@
 <?php
+$privacy_policy_url = get_privacy_policy_url() ?: home_url('/privacyverklaring/');
+
 function werkstek_single_image_from_field($image, $size = 'large') {
     if (is_numeric($image)) {
         return [
@@ -156,10 +158,10 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
         $rondleiding_status = isset($_GET['rondleiding']) ? sanitize_key($_GET['rondleiding']) : '';
         ?>
 
-        <main class="bg-white">
+        <main>
             <section class="pt-7 pb-14 lg:pt-10 lg:pb-20">
                 <div class="mx-auto max-w-7xl px-5 sm:px-6">
-                    <nav class="flex items-center gap-3 text-sm font-medium text-slate-300" aria-label="Breadcrumb">
+                    <nav class="flex items-center gap-3 text-sm font-medium text-[#B28D74]" aria-label="Breadcrumb">
                         <a href="<?php echo esc_url(home_url('/')); ?>" class="transition hover:text-slate-500" aria-label="Home">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-2">
                                 <path d="m3 10 9-7 9 7"></path>
@@ -174,7 +176,7 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
                         <?php endif; ?>
                     </nav>
 
-                    <span class="mt-8 inline-flex rounded-full bg-green-accent px-4 py-1.5 text-sm font-normal text-white">
+                    <span class="mt-8 inline-flex rounded-full bg-surface-200 px-4 py-1.5 text-sm font-normal text-dark-main">
                       Vanaf €<?php echo esc_html($ruimte['price']); ?>
                     </span>
                     <h1 class="mt-1 text-4xl font-bold leading-tight text-slate-900 sm:text-5xl lg:text-[2.65rem]"> 
@@ -195,7 +197,7 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
 
                                             <?php if ($image_index === min(count($visible_images) - 2, 3) && count($gallery_images) > 1): ?>
                                                 <span class="absolute inset-0 flex items-center justify-center bg-slate-900/35">
-                                                    <span class="inline-flex items-center gap-2 rounded-full bg-white px-5 py-3 text-sm font-bold text-slate-800 shadow-[0_16px_35px_rgba(15,23,42,0.18)]">
+                                                    <span class="inline-flex items-center gap-2 rounded-full bg-[#FCF8F3] px-5 py-3 text-sm font-bold text-slate-800 shadow-[0_16px_35px_rgba(15,23,42,0.18)]">
                                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2 text-slate-500">
                                                             <path d="M14.5 4h-5L8 6H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-3l-1.5-2Z"></path>
                                                             <circle cx="12" cy="13" r="3"></circle>
@@ -211,14 +213,14 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
                         </div>
                     <?php endif; ?>
 
-                    <div class="mt-12 grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start xl:grid-cols-[minmax(0,41rem)_21rem] xl:justify-center xl:gap-24">
+                    <div class="mt-24 grid gap-10 lg:grid-cols-[minmax(0,1fr)_20rem] lg:items-start xl:grid-cols-[minmax(0,41rem)_21rem] xl:justify-center xl:gap-24">
                         <div>
                             <?php if (! empty($facilities)): ?>
                                 <section>
                                     <h2 class="text-2xl font-black text-slate-900">Pluspunten</h2>
                                     <div class="mt-5 flex flex-wrap gap-3">
                                         <?php foreach ($facilities as $facility): ?>
-                                            <span class="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-900">
+                                            <span class="inline-flex items-center gap-2 rounded-full bg-surface-200 px-4 py-2 text-sm font-medium text-slate-900">
                                                 <img src="<?php echo esc_url($facility['icon']); ?>" alt="" class="h-5 w-5" loading="lazy">
                                                 <span><?php echo esc_html($facility['label']); ?></span>
                                             </span>
@@ -227,13 +229,15 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
                                 </section>
                             <?php endif; ?>
 
-                            <div class="<?php echo ! empty($facilities) ? 'mt-10 border-t border-slate-200 pt-10' : ''; ?> kantoorruimte-content max-w-none">
+                            <div class="<?php echo ! empty($facilities) ? 'pt-12' : ''; ?> kantoorruimte-content max-w-none">
                                 <?php the_content(); ?>
                             </div>
 
+
+
                             <?php if ($plattegrond_url): ?>
                                 <div class="mt-9">
-                                    <a href="<?php echo esc_url($plattegrond_url); ?>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-white px-5 py-3 text-base font-bold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-orange-500">
+                                    <a href="<?php echo esc_url($plattegrond_url); ?>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-[#FCF8F3] px-5 py-3 text-base font-bold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-orange-500">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2 text-slate-500">
                                             <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"></path>
                                             <path d="M9 3v15"></path>
@@ -246,7 +250,7 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
                         </div>
 
                         <aside class="lg:sticky lg:top-28">
-                            <div class="rounded-2xl border border-slate-200 bg-white p-10 shadow-[0_18px_45px_rgba(15,23,42,0.06)]">
+                            <div class="rounded-2xl bg-surface-200 p-10">
                                 <h2 class="text-3xl font-bold text-slate-900">Interesse?</h2>
                                 <p class="mt-2 text-base font-medium text-slate-900">We staan voor je klaar!</p>
 
@@ -275,6 +279,8 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
                                     <p class="mt-6 rounded-2xl bg-lime-50 px-4 py-3 text-sm font-medium text-lime-700">
                                         Bedankt, je aanvraag is verstuurd.
                                     </p>
+                                <?php elseif ($rondleiding_status === 'captcha-error'): ?>
+                                    <p class="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">De reCAPTCHA-controle is mislukt. Probeer het opnieuw.</p>
                                 <?php elseif ($rondleiding_status === 'error'): ?>
                                     <p class="mt-6 rounded-2xl bg-orange-100 px-4 py-3 text-sm font-medium text-orange-600">
                                         Vul alle verplichte velden correct in.
@@ -313,16 +319,16 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
             </section>
 
             <?php if (! empty($related_items)): ?>
-                <section class="pb-16 lg:pb-28">
-                    <div class="mx-auto max-w-7xl px-5 sm:px-6">
-                        <h2 class="text-center text-4xl font-bold text-slate-900 sm:text-5xl">
+                <section class="overflow-hidden pb-16 lg:pb-28">
+                    <div class="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-16">
+                        <h2 class="text-center text-[2.5rem] font-bold leading-tight text-dark-main sm:text-5xl lg:text-[3rem]">
                             <?php echo esc_html($related_title); ?>
                         </h2>
 
-                        <div class="mt-10 lg:mt-14">
+                        <div class="mt-14 lg:mt-8">
                             <div class="relative">
                                 <?php if ($related_slider_is_active): ?>
-                                    <button type="button" data-slider-prev="related-kantoorruimtes-slider" aria-label="Vorige kantoorruimte" class="hidden lg:inline-flex absolute left-0 top-[9.75rem] z-10 h-12 w-12 -translate-x-1/2 items-center justify-center rounded-full bg-slate-900 text-white shadow-[0_16px_30px_rgba(15,23,42,0.16)] transition hover:bg-slate-800">
+                                    <button type="button" data-slider-prev="related-kantoorruimtes-slider" aria-label="Vorige kantoorruimte" class="hidden lg:inline-flex absolute left-0 top-[8.5rem] z-10 h-16 w-16 -translate-x-1/2 items-center justify-center rounded-full border border-[#e6d9cd] bg-[#FCF8F3] text-slate-800 shadow-sm transition hover:bg-white disabled:pointer-events-none disabled:opacity-40">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
                                             <path d="m15 18-6-6 6-6"></path>
                                         </svg>
@@ -332,52 +338,54 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
                                 <div
                                     id="related-kantoorruimtes-slider"
                                     <?php echo $related_slider_is_active ? 'data-slider' : ''; ?>
-                                    class="no-scrollbar flex gap-5 pb-2 lg:gap-6 <?php echo $related_slider_is_active ? 'snap-x snap-mandatory overflow-x-auto scroll-smooth' : 'flex-col overflow-visible sm:flex-row lg:justify-center'; ?>"
+                                    class="no-scrollbar flex gap-5 pb-2 lg:gap-8 <?php echo $related_slider_is_active ? 'snap-x snap-mandatory overflow-x-auto scroll-smooth' : 'flex-col overflow-visible sm:flex-row lg:justify-center'; ?>"
                                 >
                                     <?php foreach ($related_items as $related): ?>
-                                        <article class="<?php echo $related_slider_is_active ? 'min-w-[82%] snap-start sm:min-w-[420px]' : 'w-full sm:w-[calc((100%_-_1.25rem)_/_2)]'; ?> lg:min-w-[calc((100%_-_3rem)_/_3)] lg:max-w-[calc((100%_-_3rem)_/_3)] lg:flex-none">
-                                            <a href="<?php echo esc_url($related['url']); ?>" class="group block">
-                                                <div class="relative min-h-[250px] overflow-hidden rounded-[1.75rem] bg-slate-200 shadow-[0_20px_45px_rgba(15,23,42,0.08)] transition duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_28px_60px_rgba(15,23,42,0.14)] lg:min-h-[255px]" style="background-image: linear-gradient(to top, rgba(15, 23, 42, 0.1), rgba(15, 23, 42, 0.02)), url('<?php echo esc_url($related['image']); ?>'); background-size: cover; <?php echo esc_attr($related['position']); ?>">
-                                                    <?php if ($related['is_new']): ?>
-                                                        <span class="absolute left-4 top-4 inline-flex rounded-full bg-yellow-300 px-4 py-1.5 text-sm font-semibold text-slate-900">Nieuw</span>
-                                                    <?php endif; ?>
+                                        <?php
+                                        $related_location = $related['address'] ?: $related['title'];
+                                        $related_price = preg_replace('/^vanaf\s*/i', '', (string) $related['price']);
+                                        $show_new_label = $related['is_new'] || strtolower(trim((string) $related['availability'])) === 'nieuw';
 
-                                                    <span class="absolute bottom-4 right-4 inline-flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm transition group-hover:scale-105 group-hover:text-orange-500">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
-                                                            <path d="M7 17 17 7"></path>
-                                                            <path d="M9 7h8v8"></path>
-                                                        </svg>
-                                                    </span>
+                                        if ($related_price !== '' && strpos($related_price, '€') === false && preg_match('/^\d/', $related_price)) {
+                                            $related_price = '€' . $related_price;
+                                        }
+
+                                        if ($related['location'] && stripos($related_location, $related['location']) === false) {
+                                            $related_location .= ', ' . $related['location'];
+                                        }
+                                        ?>
+                                        <article class="<?php echo $related_slider_is_active ? 'min-w-[86%] snap-start sm:min-w-[420px]' : 'w-full sm:w-[calc((100%_-_1.25rem)_/_2)]'; ?> lg:min-w-[calc((100%_-_4rem)/3)] lg:max-w-[calc((100%_-_4rem)/3)] lg:flex-none">
+                                            <a href="<?php echo esc_url($related['url']); ?>" class="group block overflow-hidden rounded-[1.75rem] bg-[#FCF8F3] transition duration-300 hover:-translate-y-1">
+                                                <div class="relative h-[255px] overflow-hidden sm:h-[250px] lg:h-[250px]">
+                                                    <img src="<?php echo esc_url($related['image']); ?>" alt="<?php echo esc_attr($related['title']); ?>" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
+
+                                                    <?php if ($show_new_label): ?>
+                                                        <span class="absolute left-5 top-5 inline-flex rounded-full bg-[#fff000] px-4 py-2 text-base font-semibold text-slate-900">Nieuw</span>
+                                                    <?php endif; ?>
                                                 </div>
 
-                                                <div class="pt-4">
-                                                    <div class="flex items-center gap-2 text-base font-medium text-slate-600">
-                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 shrink-0 fill-none stroke-current stroke-2 text-slate-400">
+                                                <div class="px-6 py-7 sm:px-8">
+                                                    <div class="flex items-center gap-1 text-base font-bold text-slate-800">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 flex-none fill-none stroke-current stroke-[1.7] text-slate-600" aria-hidden="true">
                                                             <path d="M12 21s6-4.35 6-10a6 6 0 1 0-12 0c0 5.65 6 10 6 10Z"></path>
                                                             <circle cx="12" cy="11" r="2.5"></circle>
                                                         </svg>
-                                                        <span><?php echo esc_html($related['title']); ?></span>
+                                                        <span class="truncate"><?php echo esc_html($related_location); ?></span>
                                                     </div>
 
-                                                    <?php if ($related['price'] || $related['availability']): ?>
-                                                        <div class="mt-4 flex flex-wrap items-center gap-3">
-                                                            <?php if ($related['price']): ?>
-                                                                <span class="inline-flex rounded-full bg-lime-500 px-4 py-1.5 text-sm font-semibold text-white"><?php echo esc_html($related['price']); ?></span>
-                                                            <?php endif; ?>
+                                                    <div class="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-base font-medium text-slate-400">
+                                                        <?php if ($related['price']): ?>
+                                                            <span>Vanaf <span class="text-[#fc6321]"><?php echo esc_html($related_price); ?></span></span>
+                                                        <?php endif; ?>
 
-                                                            <?php if ($related['availability']): ?>
-                                                                <span class="inline-flex items-center gap-2 rounded-full bg-slate-100 px-4 py-1.5 text-sm font-medium text-slate-600">
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-2 text-slate-400">
-                                                                        <rect x="3.5" y="5.5" width="17" height="15" rx="2"></rect>
-                                                                        <path d="M7 3.5v4"></path>
-                                                                        <path d="M17 3.5v4"></path>
-                                                                        <path d="M3.5 9.5h17"></path>
-                                                                    </svg>
-                                                                    <span><?php echo esc_html($related['availability']); ?></span>
-                                                                </span>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                    <?php endif; ?>
+                                                        <?php if ($related['price'] && $related['surface']): ?>
+                                                            <span aria-hidden="true">•</span>
+                                                        <?php endif; ?>
+
+                                                        <?php if ($related['surface']): ?>
+                                                            <span><?php echo esc_html(preg_match('/^\d+$/', $related['surface']) ? $related['surface'] . 'm²' : $related['surface']); ?></span>
+                                                        <?php endif; ?>
+                                                    </div>
                                                 </div>
                                             </a>
                                         </article>
@@ -385,7 +393,7 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
                                 </div>
 
                                 <?php if ($related_slider_is_active): ?>
-                                    <button type="button" data-slider-next="related-kantoorruimtes-slider" aria-label="Volgende kantoorruimte" class="hidden lg:inline-flex absolute right-0 top-[9.75rem] z-10 h-12 w-12 translate-x-1/2 items-center justify-center rounded-full bg-slate-900 text-white shadow-[0_16px_30px_rgba(15,23,42,0.16)] transition hover:bg-slate-800">
+                                    <button type="button" data-slider-next="related-kantoorruimtes-slider" aria-label="Volgende kantoorruimte" class="hidden lg:inline-flex absolute right-0 top-[8.5rem] z-10 h-16 w-16 translate-x-1/2 items-center justify-center rounded-full border border-[#e6d9cd] bg-[#FCF8F3] text-slate-800 shadow-sm transition hover:bg-white disabled:pointer-events-none disabled:opacity-40">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
                                             <path d="m9 6 6 6-6 6"></path>
                                         </svg>
@@ -399,10 +407,10 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
         </main>
 
         <div data-tour-modal class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 px-5 py-8" aria-hidden="true">
-            <div class="relative w-full max-w-[34rem] rounded-2xl bg-white px-6 py-8 shadow-[0_24px_80px_rgba(15,23,42,0.24)] sm:px-10">
+            <div class="relative w-full max-w-[34rem] rounded-2xl bg-surface px-6 py-8 shadow-[0_24px_80px_rgba(15,23,42,0.24)] sm:px-10">
                 <div class="flex items-start justify-between gap-5">
-                    <h2 class="text-2xl font-bold text-slate-900">Rondleiding aanvragen</h2>
-                    <button type="button" data-tour-close class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-900 transition hover:bg-slate-100" aria-label="Sluit rondleiding formulier">
+                    <h2 class="text-2xl font-bold text-dark-main opacity-100">Rondleiding aanvragen</h2>
+                    <button type="button" data-tour-close class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-900 transition hover:bg-surface-200" aria-label="Sluit rondleiding formulier">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 fill-none stroke-current stroke-2">
                             <path d="M18 6 6 18"></path>
                             <path d="m6 6 12 12"></path>
@@ -417,30 +425,57 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
 
                     <label class="block">
                         <span class="text-base font-medium text-slate-900">Naam <span class="text-orange-500">*</span></span>
-                        <input type="text" name="naam" required autocomplete="name" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-white px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
+                        <input type="text" name="naam" required autocomplete="name" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-[#FCF8F3] px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
                     </label>
 
                     <label class="block">
                         <span class="text-base font-medium text-slate-900">E-mailadres <span class="text-orange-500">*</span></span>
-                        <input type="email" name="emailadres" required autocomplete="email" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-white px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
+                        <input type="email" name="emailadres" required autocomplete="email" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-[#FCF8F3] px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
                     </label>
 
                     <label class="block">
                         <span class="text-base font-medium text-slate-900">Telefoonnummer <span class="text-orange-500">*</span></span>
-                        <input type="tel" name="telefoonnummer" required autocomplete="tel" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-white px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
+                        <input type="tel" name="telefoonnummer" required autocomplete="tel" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-[#FCF8F3] px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
+                    </label>
+
+                    <?php if (defined('WERKSTEK_RECAPTCHA_SITE_KEY') && WERKSTEK_RECAPTCHA_SITE_KEY !== ''): ?>
+                        <div class="g-recaptcha" data-sitekey="<?php echo esc_attr(WERKSTEK_RECAPTCHA_SITE_KEY); ?>"></div>
+                    <?php elseif (current_user_can('manage_options')): ?>
+                        <p class="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-800">
+                            Configureer WERKSTEK_RECAPTCHA_SITE_KEY en WERKSTEK_RECAPTCHA_SECRET_KEY in wp-config.php.
+                        </p>
+                    <?php endif; ?>
+
+                    <label class="flex cursor-pointer items-start gap-3 text-sm leading-6 text-slate-700">
+                        <input
+                            type="checkbox"
+                            name="privacy_akkoord"
+                            value="1"
+                            required
+                            class="mt-1 h-5 w-5 shrink-0 rounded border border-slate-300 accent-orange-500 focus:ring-2 focus:ring-orange-200"
+                        >
+                        <span>
+                            Ik ga akkoord met de
+                            <a href="<?php echo esc_url($privacy_policy_url); ?>" target="_blank" rel="noopener noreferrer" class="font-medium text-dark-main underline decoration-1 underline-offset-2 hover:text-orange-500">privacyverklaring</a>.
+                            <span class="text-orange-500">*</span>
+                        </span>
                     </label>
 
                     <button type="submit" class="inline-flex h-12 w-full items-center justify-center rounded-full bg-orange-500 px-6 text-base font-medium text-white transition hover:bg-orange-600">
                         Rondleiding aanvragen
                     </button>
                 </form>
+
+                <?php if (defined('WERKSTEK_RECAPTCHA_SITE_KEY') && WERKSTEK_RECAPTCHA_SITE_KEY !== ''): ?>
+                    <script src="https://www.google.com/recaptcha/api.js?hl=nl" async defer></script>
+                <?php endif; ?>
             </div>
         </div>
 
         <?php if (! empty($gallery_images)): ?>
-            <div data-gallery-modal class="gallery-modal fixed inset-0 z-50 hidden bg-white" aria-hidden="true">
+            <div data-gallery-modal class="gallery-modal fixed inset-0 z-50 hidden bg-[#FCF8F3]" aria-hidden="true">
                 <div class="flex h-full flex-col">
-                    <div class="flex min-h-16 items-center justify-between border-b border-slate-200 bg-white px-5 sm:px-8">
+                    <div class="flex min-h-16 items-center justify-between border-b border-slate-200 bg-[#FCF8F3] px-5 sm:px-8">
                         <div class="flex h-full items-center gap-6 text-sm font-medium text-slate-600">
                             <span class="inline-flex h-16 items-center gap-2 border-b-4 border-orange-500 font-bold text-slate-900">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
@@ -459,7 +494,7 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
                         </button>
                     </div>
 
-                    <div class="no-scrollbar md:grid flex-1 auto-rows-auto content-start grid-cols-1 gap-1 overflow-y-auto bg-white pb-1 md:grid-cols-6 max-lg:gap-4">
+                    <div class="no-scrollbar md:grid flex-1 auto-rows-auto content-start grid-cols-1 gap-1 overflow-y-auto bg-[#FCF8F3] pb-1 md:grid-cols-6 max-lg:gap-4">
                         <?php foreach ($gallery_images as $image_index => $image): ?>
                             <?php $gallery_item_is_wide = $image_index % 5 >= 3; ?>
                             <figure class="relative overflow-hidden bg-slate-100 <?php echo $gallery_item_is_wide ? 'md:col-span-3' : 'md:col-span-2'; ?> max-lg:aspect-3/2 max-lg:mb-2">

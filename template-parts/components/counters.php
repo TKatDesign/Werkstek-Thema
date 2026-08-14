@@ -39,11 +39,11 @@ if (empty($counters)) {
 }
 ?>
 
-<section class="bg-white py-20 sm:py-16 lg:py-16" data-counters>
+<section class="py-20 sm:py-16 lg:py-16" data-counters>
     <div class="mx-auto max-w-7xl px-5 sm:px-6">
         <div class="mx-auto max-w-3xl text-center">
             <div class="flex justify-center gap-2 text-[#f3cf55]" aria-hidden="true">
-                <img src="<?php bloginfo( 'template_url' ) ?>/resources/images/stars.svg" class="w-40 lg:w-50">
+                <img src="<?php bloginfo( 'template_url' ) ?>/resources/images/stars.svg" class="w-40 lg:w-40">
             </div>
 
             <h2 class="mt-7 text-4xl font-bold leading-[1.05] text-slate-900 sm:text-5xl lg:text-[3.25rem]">
@@ -53,13 +53,13 @@ if (empty($counters)) {
 
         <div class="mx-auto mt-9 flex max-w-[760px] flex-wrap justify-center gap-5 sm:mt-12 lg:max-w-[920px] lg:gap-6">
             <?php foreach ($counters as $counter): ?>
-                <article class="flex min-h-[175px] w-[220px] flex-col items-center justify-center rounded-[1.25rem] border border-slate-200 bg-white p-5 text-center sm:min-h-[220px] sm:max-w-[280px] sm:flex-1 sm:items-start sm:p-10 sm:text-left">
-                    <div class="flex h-14 w-14 items-center justify-center rounded-full bg-orange-accent/10 text-orange-accent sm:h-16 sm:w-16">
+                <article class="flex min-h-[175px] w-[220px] flex-col items-center justify-center rounded-[1.25rem] bg-surface-200 p-5 text-center sm:min-h-[220px] sm:max-w-[280px] sm:flex-1 sm:items-start sm:p-10 sm:text-left">
+                    <div class="flex h-16 w-16 items-center justify-center rounded-full bg-surface text-orange-accent sm:h-16 sm:w-16">
                         <?php if ($counter['icon']): ?>
                             <img
                                 src="<?php echo esc_url($counter['icon']); ?>"
                                 alt="<?php echo esc_attr($counter['icon_alt']); ?>"
-                                class="h-6 w-6 object-contain"
+                                class="h-8 w-8 object-contain"
                                 loading="lazy"
                             >
                         <?php endif; ?>

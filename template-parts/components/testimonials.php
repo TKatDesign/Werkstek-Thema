@@ -1,4 +1,7 @@
 <?php
+$theme_uri = get_template_directory_uri();
+$message_icon = $theme_uri . '/resources/images/testimonials/streamline-freehand-color_conversation-question-text-1.svg';
+
 $testimonials_query = new WP_Query([
     'post_type' => 'testimonial',
     'post_status' => 'publish',
@@ -52,7 +55,7 @@ if (empty($testimonials)) {
 $component_id = 'testimonials-' . wp_unique_id();
 ?>
 
-<section class="overflow-hidden bg-white py-20 sm:py-24 lg:py-36" data-testimonials>
+<section class="overflow-hidden py-20 sm:py-24 lg:py-36" data-testimonials>
     <div class="mx-auto max-w-7xl px-5 sm:px-6">
         <div class="relative lg:min-h-[520px]" data-testimonials-slides>
             <?php foreach ($testimonials as $index => $testimonial): ?>
@@ -77,13 +80,8 @@ $component_id = 'testimonials-' . wp_unique_id();
                             <?php endif; ?>
                         </div>
 
-                        <span class="absolute right-5 top-5 inline-flex h-14 w-14 items-center justify-center rounded-full bg-white text-green-accent shadow-sm lg:right-6 lg:top-6">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 fill-none stroke-current stroke-2">
-                                <path d="M7.5 12.5h.01"></path>
-                                <path d="M12 12.5h.01"></path>
-                                <path d="M16.5 12.5h.01"></path>
-                                <path d="M5 19.5v-12A2.5 2.5 0 0 1 7.5 5h9A2.5 2.5 0 0 1 19 7.5v7A2.5 2.5 0 0 1 16.5 17H9l-4 2.5Z"></path>
-                            </svg>
+                        <span class="absolute right-5 top-5 inline-flex h-14 w-14 items-center justify-center rounded-full bg-surface-200 text-green-accent lg:right-6 lg:top-6">
+                            <img src="<?php echo esc_url($message_icon); ?>"></img>
                         </span>
                     </div>
 
@@ -112,7 +110,7 @@ $component_id = 'testimonials-' . wp_unique_id();
                         <div class="relative z-20 mt-8 flex gap-3">
                             <button
                                 type="button"
-                                class="inline-flex h-14 w-14 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-300 transition hover:border-slate-300 hover:text-slate-900 disabled:pointer-events-none disabled:opacity-55"
+                                class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-surface-200 text-dark-main transition hover:bg-white hover:text-slate-900 disabled:pointer-events-none disabled:opacity-55"
                                 data-testimonials-prev
                                 aria-label="Vorige testimonial"
                                  >
@@ -123,7 +121,7 @@ $component_id = 'testimonials-' . wp_unique_id();
                             </button>
                             <button
                                 type="button"
-                                class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-slate-900 text-white transition hover:bg-slate-800 disabled:pointer-events-none disabled:opacity-55"
+                                class="inline-flex h-14 w-14 items-center justify-center rounded-full bg-surface-200 text-dark-main transition hover:bg-white disabled:pointer-events-none disabled:opacity-55"
                                 data-testimonials-next
                                 aria-label="Volgende testimonial"
                             >

@@ -37,7 +37,7 @@ if (empty($locaties)) {
     <div class="mx-auto max-w-7xl px-5 sm:px-6">
         <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
             <div class="max-w-3xl">
-                <span class="inline-flex items-center rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-600">
+                <span class="inline-flex items-center rounded-full bg-surface-200 px-4 py-2 text-sm font-medium text-slate-600">
                     <?php echo esc_html($sectie_label); ?>
                 </span>
                 <h2 class="mt-5 text-4xl font-bold text-slate-900 sm:text-5xl">
@@ -50,11 +50,11 @@ if (empty($locaties)) {
                     href="<?php echo esc_url($button_url); ?>"
                     target="<?php echo esc_attr($button_target); ?>"
                     rel="<?php echo $button_target === '_blank' ? 'noopener noreferrer' : ''; ?>"
-                    class="inline-flex items-center gap-3 rounded-full bg-slate-900 px-6 py-2.5 pr-3 text-base font-medium text-white transition hover:bg-slate-800"
+                    class="inline-flex items-center gap-1 rounded-full text-base font-medium text-green-accent transition"
                 >
-                    <span><?php echo esc_html($button_tekst); ?></span>
-                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-slate-800 text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-2">
+                    <span class="underline"><?php echo esc_html($button_tekst); ?></span>
+                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-full text-green-accent">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 fill-none stroke-current stroke-2">
                             <path d="M7 17 17 7"></path>
                             <path d="M9 7h8v8"></path>
                         </svg>
@@ -67,12 +67,12 @@ if (empty($locaties)) {
             <?php foreach ($locaties as $locatie): ?>
                 <a
                     href="<?php echo esc_url($locatie['url']); ?>"
-                    class="group flex items-center gap-4 rounded-[1.75rem] border border-slate-200 bg-white p-4 shadow-[0_18px_40px_rgba(15,23,42,0.06)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(15,23,42,0.1)]"
+                    class="group flex items-center gap-4 rounded-[1.75rem] bg-surface-200 p-4 transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_50px_rgba(15,23,42,0.1)]"
                 >
                     <img
                         src="<?php echo esc_url($locatie['image']); ?>"
                         alt="<?php echo esc_attr($locatie['name']); ?>"
-                        class="h-20 w-20 shrink-0 rounded-[1.25rem] object-cover shadow-[0_10px_24px_rgba(15,23,42,0.12)]"
+                        class="h-20 w-20 shrink-0 rounded-[1.25rem] object-cover"
                     >
 
                     <div class="min-w-0 flex-1">

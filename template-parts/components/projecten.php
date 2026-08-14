@@ -73,7 +73,7 @@ $has_slider = count($projects) > 1;
         <div class="relative mt-10 lg:mt-14 lg:grid lg:grid-cols-[3.5rem_minmax(0,1fr)_3.5rem] lg:items-center lg:gap-6">
             <button
                 type="button"
-                class="<?php echo $has_slider ? 'hidden lg:inline-flex' : 'hidden'; ?> h-14 w-14 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-300 shadow-sm transition hover:border-slate-300 hover:text-slate-900 disabled:pointer-events-none disabled:opacity-45"
+                class="<?php echo $has_slider ? 'hidden lg:inline-flex' : 'hidden'; ?> h-14 w-14 items-center justify-center rounded-full bg-surface-200 text-dark-main transition hover:text-slate-900 disabled:pointer-events-none disabled:opacity-45"
                 data-projects-prev
                 aria-label="Vorig project"
             >
@@ -102,13 +102,13 @@ $has_slider = count($projects) > 1;
                             >
                             <div class="absolute inset-0 bg-gradient-to-t from-slate-950/10 via-transparent to-transparent"></div>
 
-                            <div class="absolute bottom-5 left-5 right-5 max-w-[26rem] rounded-[1.25rem] bg-white p-6 shadow-[0_24px_55px_rgba(15,23,42,0.14)] sm:bottom-10 sm:left-10 sm:p-8 lg:bottom-12 lg:left-12">
+                            <div class="absolute bottom-5 left-5 right-5 max-w-[26rem] rounded-[1.25rem] bg-surface-200 p-6 shadow-[0_24px_55px_rgba(15,23,42,0.14)] sm:bottom-10 sm:left-10 sm:p-8 lg:bottom-12 lg:left-12">
                                 <h3 class="text-2xl font-bold leading-tight text-slate-900 lg:text-[1.65rem]">
                                     <?php echo esc_html($project['address']); ?>
                                 </h3>
 
                                 <?php if ($project['city']): ?>
-                                    <p class="mt-1 text-base font-medium leading-6 text-slate-400">
+                                    <p class="mt-1 text-base font-medium leading-6 text-text-dark">
                                         <?php echo esc_html($project['city']); ?>
                                     </p>
                                 <?php endif; ?>
@@ -133,7 +133,7 @@ $has_slider = count($projects) > 1;
                                         href="<?php echo esc_url($project['url']); ?>"
                                         target="<?php echo esc_attr($project['target']); ?>"
                                         rel="<?php echo $project['target'] === '_blank' ? 'noopener noreferrer' : ''; ?>"
-                                        class="mt-7 inline-flex items-center gap-4 rounded-full bg-[#e8e6e3] py-2 pl-6 pr-2 text-base font-medium text-slate-900 transition hover:bg-slate-200"
+                                        class="mt-7 inline-flex items-center gap-4 rounded-full bg-dark-main py-2 pl-6 pr-2 text-base font-medium text-white transition hover:bg-orange-accent"
                                     >
                                         <span>Bekijk kantoor</span>
                                         <span class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-white text-slate-900">
@@ -152,7 +152,7 @@ $has_slider = count($projects) > 1;
 
             <button
                 type="button"
-                class="<?php echo $has_slider ? 'hidden lg:inline-flex' : 'hidden'; ?> h-14 w-14 items-center justify-center rounded-full bg-[#e8e6e3] text-slate-900 shadow-sm transition hover:bg-slate-200 disabled:pointer-events-none disabled:opacity-45"
+                class="<?php echo $has_slider ? 'hidden lg:inline-flex' : 'hidden'; ?> h-14 w-14 items-center justify-center rounded-full bg-surface-200 text-slate-900 transition hover:bg-surface-200 disabled:pointer-events-none disabled:opacity-45"
                 data-projects-next
                 aria-label="Volgend project"
             >

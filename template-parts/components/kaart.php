@@ -69,7 +69,7 @@ $pin_inactive_url = get_template_directory_uri() . '/resources/images/verhuren/p
                     ?>
                     <button
                         type="button"
-                        class="inline-flex min-h-10 items-center rounded-full px-5 py-2 text-base font-medium leading-none transition <?php echo $is_active ? 'bg-orange-accent text-white' : 'bg-[#eeeeee] text-slate-900 hover:bg-slate-200'; ?>"
+                        class="inline-flex min-h-10 items-center rounded-full px-5 py-2 text-base font-medium leading-none transition hover:bg-orange-accent hover:text-white <?php echo $is_active ? 'bg-orange-accent text-white' : 'bg-surface-200 text-slate-900'; ?>"
                         id="<?php echo esc_attr($location_id . '-tab'); ?>"
                         data-location-map-pill="<?php echo esc_attr($index); ?>"
                         aria-controls="<?php echo esc_attr($location_id . '-pin'); ?>"

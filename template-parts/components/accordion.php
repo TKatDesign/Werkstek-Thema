@@ -60,8 +60,8 @@ if (empty($items)) {
 $component_id = 'accordion-' . wp_unique_id();
 ?>
 
-<section class="bg-white py-14 lg:py-24">
-    <div class="mx-5 rounded-[0.75rem] bg-[#f4f3f1] px-5 py-16 sm:mx-6 sm:px-8 lg:mx-12 lg:px-24 lg:py-28">
+<section class="">
+    <div class="mx-5 rounded-[0.75rem] lg:mx-12 lg:px-24 lg:py-4">
         <h2 class="mx-auto max-w-3xl text-center text-4xl font-bold leading-[1.05] text-slate-900 sm:text-5xl lg:text-[3.25rem]">
             <?php echo nl2br(esc_html($titel)); ?>
         </h2>
@@ -89,7 +89,7 @@ $component_id = 'accordion-' . wp_unique_id();
                     $button_id = $component_id . '-button-' . $index;
                     $panel_id = $component_id . '-panel-' . $index;
                     ?>
-                    <article class="<?php echo $is_open ? 'w-full rounded-[0.75rem] bg-slate-900 text-white' : 'rounded-full bg-[#e8e6e3] text-[#a4a4a4]'; ?> overflow-hidden transition-colors duration-200" data-accordion-item>
+                    <article class="<?php echo $is_open ? 'w-full rounded-[0.75rem] bg-dark-main text-white' : 'rounded-full bg-surface-200 text-[#a4a4a4]'; ?> overflow-hidden transition-colors duration-200" data-accordion-item>
                         <button
                             type="button"
                             id="<?php echo esc_attr($button_id); ?>"
@@ -120,15 +120,15 @@ $component_id = 'accordion-' . wp_unique_id();
 
         <?php if ($button_tekst && $button_url): ?>
             <div class="mt-12 flex justify-center lg:mt-16">
-                <a
+                   <a
                     href="<?php echo esc_url($button_url); ?>"
                     target="<?php echo esc_attr($button_target); ?>"
                     rel="<?php echo $button_target === '_blank' ? 'noopener noreferrer' : ''; ?>"
-                    class="inline-flex h-14 items-center gap-5 rounded-full bg-slate-900 py-1.5 pl-6 pr-1.5 text-base font-normal text-white transition hover:bg-slate-800"
+                    class="group inline-flex items-center gap-4 rounded-full bg-dark-main py-2 pl-7 pr-2 text-base font-medium text-white transition hover:bg-orange-accent"
                 >
                     <span><?php echo esc_html($button_tekst); ?></span>
-                    <span class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-green-accent text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
+                    <span class="inline-flex h-9 w-9 items-center justify-center rounded-full bg-[#FCF8F3] text-dark-main shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-none stroke-current stroke-2">
                             <path d="M7 17 17 7"></path>
                             <path d="M9 7h8v8"></path>
                         </svg>
