@@ -90,41 +90,72 @@ function werkstek_single_get_file_url($post_id, $field_name) {
     return is_string($file) ? trim($file) : '';
 }
 
-function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
-    if (! $term_id) {
-        return [];
-    }
-
+function werkstek_single_related_kantoorruimtes($post_id, $term_id = 0) {
     $related_query = new WP_Query([
         'post_type' => 'kantoorruimte',
         'post_status' => 'publish',
-        'posts_per_page' => 12,
+        'posts_per_page' => -1,
         'post__not_in' => [$post_id],
         'orderby' => [
             'menu_order' => 'ASC',
             'date' => 'DESC',
         ],
-        'tax_query' => [
-            [
-                'taxonomy' => 'locatie',
-                'field' => 'term_id',
-                'terms' => $term_id,
-            ],
-        ],
+        'no_found_rows' => true,
     ]);
 
     $items = [];
+    $current_space = werkstek_get_kantoorruimte_card_data($post_id);
+    $current_latitude = $current_space['latitude'] ?? null;
+    $current_longitude = $current_space['longitude'] ?? null;
+    $has_current_coordinates = is_numeric($current_latitude) && is_numeric($current_longitude);
 
     if ($related_query->have_posts()) {
         while ($related_query->have_posts()) {
             $related_query->the_post();
-            $items[] = werkstek_get_kantoorruimte_card_data(get_the_ID());
+            $related_id = get_the_ID();
+            $item = werkstek_get_kantoorruimte_card_data($related_id);
+            $item_latitude = $item['latitude'] ?? null;
+            $item_longitude = $item['longitude'] ?? null;
+            $has_item_coordinates = is_numeric($item_latitude) && is_numeric($item_longitude);
+
+            $item['_nearby_group'] = 2;
+            $item['_distance'] = PHP_FLOAT_MAX;
+            $item['_original_order'] = count($items);
+
+            if ($has_current_coordinates && $has_item_coordinates) {
+                $latitude_delta = deg2rad((float) $item_latitude - (float) $current_latitude);
+                $longitude_delta = deg2rad((float) $item_longitude - (float) $current_longitude);
+                $current_latitude_rad = deg2rad((float) $current_latitude);
+                $item_latitude_rad = deg2rad((float) $item_latitude);
+                $haversine = sin($latitude_delta / 2) ** 2
+                    + cos($current_latitude_rad) * cos($item_latitude_rad) * sin($longitude_delta / 2) ** 2;
+
+                $item['_distance'] = 6371 * 2 * atan2(sqrt($haversine), sqrt(max(0, 1 - $haversine)));
+                $item['_nearby_group'] = 0;
+            } elseif ($term_id && has_term($term_id, 'locatie', $related_id)) {
+                // Fallback for older entries without coordinates.
+                $item['_nearby_group'] = 1;
+            }
+
+            $items[] = $item;
         }
     }
 
     wp_reset_postdata();
 
-    return $items;
+    usort($items, static function ($first, $second) {
+        if ($first['_nearby_group'] !== $second['_nearby_group']) {
+            return $first['_nearby_group'] <=> $second['_nearby_group'];
+        }
+
+        if ($first['_distance'] !== $second['_distance']) {
+            return $first['_distance'] <=> $second['_distance'];
+        }
+
+        return $first['_original_order'] <=> $second['_original_order'];
+    });
+
+    return array_slice($items, 0, 12);
 }
 ?>
 
@@ -150,7 +181,7 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
         }
 
         $related_items = werkstek_single_related_kantoorruimtes($post_id, $primary_term instanceof WP_Term ? $primary_term->term_id : 0);
-        $related_title = $primary_term instanceof WP_Term ? 'Meer in ' . $primary_term->name : 'Meer kantoorruimtes';
+        $related_title = 'Meer kantoorruimtes';
         $related_count = count($related_items);
         $related_slider_is_active = $related_count > 3;
         $archive_url = get_post_type_archive_link('kantoorruimte') ?: home_url('/kantoorruimte-huren/');
