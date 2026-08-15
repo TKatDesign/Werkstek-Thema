@@ -42,7 +42,7 @@ if ($kantoorruimtes_query->have_posts()) {
             </h2>
         </div>
 
-        <div class="mt-14 lg:mt-8">
+        <div class="mt-8 lg:mt-8">
             <div class="relative">
                 <button
                     type="button"
@@ -136,7 +136,7 @@ if ($kantoorruimtes_query->have_posts()) {
                 </button>
             </div>
 
-            <div class="mt-12 flex justify-center lg:mt-16">
+            <div class="mt-8 flex justify-center lg:mt-8">
                 <a
                     href="<?php echo esc_url($button_url); ?>"
                     target="<?php echo esc_attr($button_target); ?>"

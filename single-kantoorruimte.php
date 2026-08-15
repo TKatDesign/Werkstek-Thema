@@ -237,7 +237,7 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
 
                             <?php if ($plattegrond_url): ?>
                                 <div class="mt-9">
-                                    <a href="<?php echo esc_url($plattegrond_url); ?>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 rounded-full border border-slate-200 bg-[#FCF8F3] px-5 py-3 text-base font-bold text-slate-700 shadow-sm transition hover:border-slate-300 hover:text-orange-500">
+                                    <a href="<?php echo esc_url($plattegrond_url); ?>" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-3 rounded-full bg-surface-200 px-5 py-3 text-base font-bold text-slate-700 transition hover:bg-white">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2 text-slate-500">
                                             <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3V6Z"></path>
                                             <path d="M9 3v15"></path>
@@ -406,9 +406,9 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
             <?php endif; ?>
         </main>
 
-        <div data-tour-modal class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 px-5 py-8" aria-hidden="true">
-            <div class="relative w-full max-w-[34rem] rounded-2xl bg-surface px-6 py-8 shadow-[0_24px_80px_rgba(15,23,42,0.24)] sm:px-10">
-                <div class="flex items-start justify-between gap-5">
+        <div data-tour-modal class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4 sm:px-5 sm:py-8" aria-hidden="true">
+            <div class="relative flex h-[calc(100dvh-2rem)] max-h-[calc(100dvh-2rem)] w-full max-w-[34rem] flex-col overflow-hidden rounded-2xl bg-surface px-6 py-6 shadow-[0_24px_80px_rgba(15,23,42,0.24)] sm:h-auto sm:max-h-[calc(100dvh-4rem)] sm:px-10 sm:py-8">
+                <div class="flex shrink-0 items-start justify-between gap-5">
                     <h2 class="text-2xl font-bold text-dark-main opacity-100">Rondleiding aanvragen</h2>
                     <button type="button" data-tour-close class="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full text-slate-900 transition hover:bg-surface-200" aria-label="Sluit rondleiding formulier">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 fill-none stroke-current stroke-2">
@@ -418,7 +418,7 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
                     </button>
                 </div>
 
-                <form class="mt-8 space-y-7" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+                <form class="-mr-2 mt-6 min-h-0 flex-1 space-y-7 overflow-y-auto pb-1 pr-2 sm:mt-8" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
                     <input type="hidden" name="action" value="werkstek_rondleiding_aanvraag">
                     <input type="hidden" name="kantoorruimte_id" value="<?php echo esc_attr($post_id); ?>">
                     <?php wp_nonce_field('werkstek_rondleiding_aanvraag_' . $post_id, 'werkstek_rondleiding_nonce'); ?>
@@ -473,9 +473,9 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
         </div>
 
         <?php if (! empty($gallery_images)): ?>
-            <div data-gallery-modal class="gallery-modal fixed inset-0 z-50 hidden bg-[#FCF8F3]" aria-hidden="true">
-                <div class="flex h-full flex-col">
-                    <div class="flex min-h-16 items-center justify-between border-b border-slate-200 bg-[#FCF8F3] px-5 sm:px-8">
+            <div data-gallery-modal class="gallery-modal fixed inset-0 z-50 hidden h-[100dvh] bg-[#FCF8F3]" aria-hidden="true">
+                <div class="flex h-full min-h-0 flex-col">
+                    <div class="flex min-h-16 shrink-0 items-center justify-between border-b border-slate-200 bg-[#FCF8F3] px-5 sm:px-8">
                         <div class="flex h-full items-center gap-6 text-sm font-medium text-slate-600">
                             <span class="inline-flex h-16 items-center gap-2 border-b-4 border-orange-500 font-bold text-slate-900">
                                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
@@ -494,11 +494,10 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id) {
                         </button>
                     </div>
 
-                    <div class="no-scrollbar md:grid flex-1 auto-rows-auto content-start grid-cols-1 gap-1 overflow-y-auto bg-[#FCF8F3] pb-1 md:grid-cols-6 max-lg:gap-4">
+                    <div class="no-scrollbar min-h-0 flex-1 overflow-y-auto bg-[#FCF8F3] pb-1 md:grid md:auto-rows-auto md:grid-cols-6 md:content-start md:items-start md:gap-1 max-md:space-y-4">
                         <?php foreach ($gallery_images as $image_index => $image): ?>
                             <?php $gallery_item_is_wide = $image_index % 5 >= 3; ?>
-                            <figure class="relative overflow-hidden bg-slate-100 <?php echo $gallery_item_is_wide ? 'md:col-span-3' : 'md:col-span-2'; ?> max-lg:aspect-3/2 max-lg:mb-2">
-                                <span class="block w-full" style="padding-top: 56.25%;" aria-hidden="true"></span>
+                            <figure class="relative aspect-[3/2] w-full self-start overflow-hidden bg-slate-100 md:aspect-auto <?php echo $gallery_item_is_wide ? 'md:col-span-3 md:h-[33.333vw]' : 'md:col-span-2 md:h-[22.222vw]'; ?>">
                                 <img src="<?php echo esc_url($image['url']); ?>" alt="<?php echo esc_attr($image['alt']); ?>" class="absolute inset-0 h-full w-full object-cover">
                             </figure>
                         <?php endforeach; ?>

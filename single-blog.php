@@ -198,23 +198,23 @@ while (have_posts()) {
 
                         <?php if (in_array($normalized_layout, ['cta_blok', 'cta_block'], true)): ?>
                             <div class="my-2 overflow-hidden rounded-[1.25rem] lg:my-14 bg-surface-200">
-                                <div class="grid items-end gap-8 lg:grid-cols-2 lg:gap-10">
-                                    <div style="padding: 48px 0 48px 48px;">
-                                        <h2 class="max-w-md text-3xl font-bold leading-[1.05] text-slate-900 sm:text-[40px]">
+                                <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
+                                    <div class="px-8 py-8 sm:px-12 lg:px-14">
+                                        <h2 class="max-w-md text-2xl font-bold leading-[1.05] text-slate-900 sm:text-[40px]">
                                             Jouw eigen kantoorruimte?
                                         </h2>
 
                                         <ul class="mt-6 space-y-3">
-                                            <li class="flex items-center gap-3 text-lg font-medium text-slate-900">
-                                                <span class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-green-accent text-green-accent">
+                                            <li class="flex items-center gap-3 lg:text-lg text-md font-medium text-slate-900">
+                                                <span class="inline-flex h-4 w-4 lg:h-5 lg:w-5 shrink-0 items-center justify-center rounded-full border border-green-accent text-green-accent">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-none stroke-current stroke-[2.5]">
                                                         <path d="m6 12 4 4 8-8"></path>
                                                     </svg>
                                                 </span>
                                                 <span>Binnen no-time geregeld</span>
                                             </li>
-                                            <li class="flex items-center gap-3 text-lg font-medium text-slate-900">
-                                                <span class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-green-accent text-green-accent">
+                                            <li class="flex items-center gap-3 lg:text-lg text-md font-medium text-slate-900">
+                                                <span class="inline-flex h-4 w-4 lg:h-5 lg:w-5 shrink-0 items-center justify-center rounded-full border border-green-accent text-green-accent">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-none stroke-current stroke-[2.5]">
                                                         <path d="m6 12 4 4 8-8"></path>
                                                     </svg>
@@ -248,24 +248,24 @@ while (have_posts()) {
                         <?php endif; ?>
 
                         <?php if (in_array($normalized_layout, ['cta_blok_2', 'cta_block_2'], true)): ?>
-                            <div class="my-10 overflow-hidden rounded-[1.25rem] lg:my-14 bg-surface-200">
-                                <div class="grid items-end gap-8 lg:grid-cols-2 lg:gap-10">
-                                    <div style="padding: 48px 0 48px 48px;">
-                                        <h2 class="max-w-md text-3xl font-bold leading-[1.05] text-slate-900 sm:text-[40px]">
+                            <div class="overflow-hidden rounded-[1.25rem] lg:my-14 bg-surface-200">
+                                <div class="grid items-center gap-8 lg:grid-cols-2 lg:gap-10">
+                                    <div class="px-8 py-8 sm:px-12 lg:px-14">
+                                        <h2 class="max-w-md text-2xl lg:text-[40px] font-bold leading-[1.05] text-slate-900 sm:text-[40px]">
                                             Een uitgebreid netwerk?
                                         </h2>
 
                                         <ul class="mt-6 space-y-3">
-                                            <li class="flex items-center gap-3 text-lg font-medium text-slate-900">
-                                                <span class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-green-accent text-green-accent">
+                                            <li class="flex items-center gap-3 lg:text-lg text-md font-medium text-slate-900">
+                                                <span class="inline-flex h-4 w-4 lg:h-5 lg:w-5 shrink-0 items-center justify-center rounded-full border border-green-accent text-green-accent">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-none stroke-current stroke-[2.5]">
                                                         <path d="m6 12 4 4 8-8"></path>
                                                     </svg>
                                                 </span>
                                                 <span>Events &amp; bijeenkomsten</span>
                                             </li>
-                                            <li class="flex items-center gap-3 text-lg font-medium text-slate-900">
-                                                <span class="inline-flex h-5 w-5 shrink-0 items-center justify-center rounded-full border border-green-accent text-green-accent">
+                                            <li class="flex items-center gap-3 lg:text-lg text-md font-medium text-slate-900">
+                                                <span class="inline-flex h-4 w-4 lg:h-5 lg:w-5 shrink-0 items-center justify-center rounded-full border border-green-accent text-green-accent">
                                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-3.5 w-3.5 fill-none stroke-current stroke-[2.5]">
                                                         <path d="m6 12 4 4 8-8"></path>
                                                     </svg>
@@ -302,9 +302,9 @@ while (have_posts()) {
             </section>
         <?php endif; ?>
 
-        <section class="pb-16 lg:pb-24">
+        <section class="">
             <div class="mx-auto max-w-4xl px-5 sm:px-6">
-                <div class="flex flex-wrap items-center gap-3 py-8">
+                <div class="flex flex-wrap items-center gap-3">
                     <span class="mr-1 text-lg font-bold text-slate-900">Delen</span>
 
                     <?php foreach ($share_links as $share_link): ?>
@@ -326,7 +326,6 @@ while (have_posts()) {
                     <?php endforeach; ?>
                 </div>
 
-                <div class="mt-8 h-px w-full bg-slate-200"></div>
             </div>
 
             <?php if (! empty($related_blogs)): ?>

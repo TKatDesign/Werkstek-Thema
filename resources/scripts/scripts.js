@@ -688,10 +688,10 @@ document.querySelectorAll('[data-community-video-tabs]').forEach((tabList) => {
       const isActive = tab === activeTab;
       const logo = tab.querySelector('img');
       tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
-      tab.classList.toggle('border-green-accent', isActive);
+      tab.classList.toggle('border-orange-accent', isActive);
       tab.classList.toggle('shadow-[0_14px_30px_rgba(15,23,42,0.08)]', isActive);
       tab.classList.toggle('bg-[#FCF8F3]', isActive);
-      tab.classList.toggle('border-slate-200', !isActive);
+      tab.classList.toggle('border-surface', !isActive);
       tab.classList.toggle('bg-[#FCF8F3]/80', !isActive);
 
       if (logo) {
@@ -708,18 +708,20 @@ document.querySelectorAll('[data-community-video-tabs]').forEach((tabList) => {
 
       if (!isActivePanel) {
         panel.querySelectorAll('[data-community-video-player]').forEach((player) => {
-          const video = player.querySelector('video');
-          const iframe = player.querySelector('iframe');
-
           player.classList.remove('is-playing');
 
-          if (video) {
+          player.querySelectorAll('video').forEach((video) => {
             video.pause();
-          }
+            video.currentTime = 0;
+          });
 
-          if (iframe && iframe.dataset.originalSrc) {
-            iframe.src = iframe.dataset.originalSrc;
-          }
+          player.querySelectorAll('iframe').forEach((iframe) => {
+            const originalSrc = iframe.dataset.originalSrc || iframe.getAttribute('src');
+            if (!originalSrc) return;
+
+            iframe.src = 'about:blank';
+            iframe.src = originalSrc;
+          });
         });
       }
     });
@@ -737,9 +739,10 @@ document.querySelectorAll('[data-community-video-player]').forEach((player) => {
 
   if (!playButton) return;
 
-  if (iframe && iframe.src) {
-    iframe.dataset.originalSrc = iframe.src;
-  }
+  player.querySelectorAll('iframe').forEach((playerIframe) => {
+    const originalSrc = playerIframe.getAttribute('src');
+    if (originalSrc) playerIframe.dataset.originalSrc = originalSrc;
+  });
 
   const setPlaying = (isPlaying) => {
     player.classList.toggle('is-playing', isPlaying);

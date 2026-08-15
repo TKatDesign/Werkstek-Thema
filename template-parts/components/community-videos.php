@@ -62,7 +62,7 @@ $default_active_index = count($community_videos) > 1 ? 1 : 0;
                     id="<?php echo esc_attr($component_id . '-tab-' . $video['id']); ?>"
                     data-community-video-tab
                     data-panel-id="<?php echo esc_attr($component_id . '-panel-' . $video['id']); ?>"
-                    class="<?php echo $is_active ? 'border-green-accent bg-[#FCF8F3]' : 'border-surface bg-[#FCF8F3]/80'; ?> inline-flex h-20 min-w-[110px] items-center justify-center rounded-[1.5rem] border px-6 transition hover:border-accent-green hover:bg-[#FCF8F3]"
+                    class="<?php echo $is_active ? 'border-orange-accent bg-[#FCF8F3]' : 'border-surface bg-[#FCF8F3]/80'; ?> inline-flex h-20 min-w-[110px] items-center justify-center rounded-[1.5rem] border px-6 transition hover:border-orange-accent hover:bg-[#FCF8F3]"
                     role="tab"
                     aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
                     aria-controls="<?php echo esc_attr($component_id . '-panel-' . $video['id']); ?>"
