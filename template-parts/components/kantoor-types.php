@@ -39,22 +39,22 @@ foreach ($blokken as $index => $blok_key) {
 
 <section class="py-12 sm:py-16 lg:py-20">
     <div class="mx-auto max-w-[1280px] px-5 sm:px-6">
-        <div class="grid gap-5 md:grid-cols-3 lg:gap-7">
+        <div class="grid gap-3 lg:gap-5 md:grid-cols-3 lg:gap-7">
             <?php foreach ($kantoor_types as $type): ?>
                 <article>
                     <a
                         href="<?php echo esc_url($type['url']); ?>"
                         target="<?php echo esc_attr($type['target']); ?>"
                         rel="<?php echo $type['target'] === '_blank' ? 'noopener noreferrer' : ''; ?>"
-                        class="group flex min-h-26 items-center gap-5 rounded-[1.75rem] bg-surface-200 p-5 pr-6 text-dark-main transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_45px_rgba(15,41,58,0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-accent focus-visible:ring-offset-2 sm:gap-6 sm:p-6 sm:pr-7"
+                        class="group flex min-h-18 lg:min-h-26 items-center gap-5 rounded-[1.75rem] bg-surface-200 p-5 pr-6 text-dark-main transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_45px_rgba(15,41,58,0.08)] focus:outline-none focus-visible:ring-2 focus-visible:ring-orange-accent focus-visible:ring-offset-2 sm:gap-6 sm:p-6 sm:pr-7"
                     >
-                        <span class="flex h-14 w-14 shrink-0 items-center justify-center rounded-br-[1.5rem] rounded-tl-[1.5rem] bg-surface">
+                        <span class="flex h-10 w-10 lg:h-14 lg:w-14 shrink-0 items-center justify-center rounded-br-[1.5rem] rounded-tl-[1.5rem] bg-surface">
                             <?php if ($type['icon']): ?>
-                                <img src="<?php echo esc_url($type['icon']); ?>" alt="<?php echo esc_attr($type['icon_alt']); ?>" class="h-6 w-6 object-contain" loading="lazy">
+                                <img src="<?php echo esc_url($type['icon']); ?>" alt="<?php echo esc_attr($type['icon_alt']); ?>" class="h-4 w-4 lg:h-6 lg:w-6 object-contain" loading="lazy">
                             <?php endif; ?>
                         </span>
 
-                        <h3 class="min-w-0 flex-1 text-xl font-bold leading-tight text-dark-main lg:text-[1.15rem]">
+                        <h3 class="min-w-0 flex-1 text-base lg:text-xl font-bold leading-tight text-dark-main lg:text-[1.15rem]">
                             <?php echo esc_html($type['title']); ?>
                         </h3>
 

@@ -19,6 +19,53 @@ function werkstek_register_acf_options_pages() {
 }
 add_action('acf/init', 'werkstek_register_acf_options_pages');
 
+function werkstek_register_footer_social_fields() {
+    if (! function_exists('acf_add_local_field_group')) {
+        return;
+    }
+
+    acf_add_local_field_group([
+        'key' => 'group_werkstek_footer_socials',
+        'title' => 'Footer social media',
+        'fields' => [
+            [
+                'key' => 'field_werkstek_footer_instagram_url',
+                'label' => 'Instagram URL',
+                'name' => 'footer_instagram_url',
+                'type' => 'url',
+                'placeholder' => 'https://www.instagram.com/...',
+            ],
+            [
+                'key' => 'field_werkstek_footer_facebook_url',
+                'label' => 'Facebook URL',
+                'name' => 'footer_facebook_url',
+                'type' => 'url',
+                'placeholder' => 'https://www.facebook.com/...',
+            ],
+            [
+                'key' => 'field_werkstek_footer_linkedin_url',
+                'label' => 'LinkedIn URL',
+                'name' => 'footer_linkedin_url',
+                'type' => 'url',
+                'placeholder' => 'https://www.linkedin.com/company/...',
+            ],
+        ],
+        'location' => [
+            [
+                [
+                    'param' => 'options_page',
+                    'operator' => '==',
+                    'value' => 'overige-instellingen',
+                ],
+            ],
+        ],
+        'position' => 'normal',
+        'style' => 'default',
+        'active' => true,
+    ]);
+}
+add_action('acf/init', 'werkstek_register_footer_social_fields', 20);
+
 function werkstek_get_vastgoedconsultants() {
     if (! function_exists('get_field')) {
         return [];

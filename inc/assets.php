@@ -11,7 +11,6 @@ define('VITE_THEME_DEV_ASSETS_DIR', 'resources');
 define('VITE_THEME_DEV_CLIENT_PATH', VITE_THEME_DEV_SERVER . '/@vite/client');
 define('VITE_THEME_DEV_SCRIPTS_PATH', VITE_THEME_DEV_SERVER . '/resources/scripts/scripts.js');
 define('VITE_THEME_DEV_STYLES_PATH', VITE_THEME_DEV_SERVER . '/resources/styles/styles.css');
-define('WERKSTEK_GOOGLE_MAPS_API_KEY', 'AIzaSyB-alg9vyS89fUT-39wNwYmmm1I9DV0jrY');
 
 function werkstek_allow_svg_uploads($mimes) {
     if (current_user_can('upload_files')) {
@@ -69,6 +68,80 @@ function werkstek_allow_svg_in_acf_image_fields($errors, $file, $attachment, $fi
     return $errors;
 }
 add_filter('acf/validate_is_image_attachment', 'werkstek_allow_svg_in_acf_image_fields', 10, 5);
+
+/**
+ * Use a regular media control for the site logo. WordPress normally uses a
+ * cropper here, but SVG files cannot be cropped and are therefore rejected by
+ * that workflow. The media control keeps the same custom_logo setting while
+ * allowing a sanitised SVG to be selected directly.
+ */
+function werkstek_allow_svg_custom_logo($wp_customize) {
+    if (! $wp_customize instanceof WP_Customize_Manager || ! $wp_customize->get_setting('custom_logo')) {
+        return;
+    }
+
+    $wp_customize->remove_control('custom_logo');
+    $wp_customize->add_control(
+        new WP_Customize_Media_Control(
+            $wp_customize,
+            'custom_logo',
+            [
+                'label'       => __('Logo', 'werkstek-thema'),
+                'section'     => 'title_tagline',
+                'priority'    => 8,
+                'mime_type'   => 'image',
+                'button_labels' => [
+                    'select'       => __('Selecteer logo', 'werkstek-thema'),
+                    'change'       => __('Wijzig logo', 'werkstek-thema'),
+                    'default'      => __('Standaard', 'werkstek-thema'),
+                    'remove'       => __('Verwijder', 'werkstek-thema'),
+                    'placeholder'  => __('Geen logo geselecteerd', 'werkstek-thema'),
+                    'frame_title'  => __('Selecteer logo', 'werkstek-thema'),
+                    'frame_button' => __('Gebruik als logo', 'werkstek-thema'),
+                ],
+            ]
+        )
+    );
+}
+add_action('customize_register', 'werkstek_allow_svg_custom_logo', 100);
+
+/**
+ * Fallback for WordPress/plugin combinations that restore the cropped logo
+ * control after customize_register. SVGs must be used as-is, so bypass the
+ * cropper when the selected attachment has an SVG MIME type.
+ */
+function werkstek_skip_svg_logo_cropping() {
+    $script = <<<'JS'
+(function (api) {
+    api.bind('ready', function () {
+        var control = api.control('custom_logo');
+
+        if (!control || typeof control.onSelect !== 'function' || typeof control.setImageFromAttachment !== 'function') {
+            return;
+        }
+
+        var originalOnSelect = control.onSelect;
+
+        control.onSelect = function () {
+            var attachment = this.frame.state().get('selection').first().toJSON();
+            var mime = String(attachment.mime || attachment.type || '').toLowerCase();
+            var filename = String(attachment.filename || attachment.url || '').toLowerCase();
+
+            if (mime === 'image/svg+xml' || filename.endsWith('.svg')) {
+                this.setImageFromAttachment(attachment);
+                this.frame.close();
+                return;
+            }
+
+            originalOnSelect.call(this);
+        };
+    });
+}(wp.customize));
+JS;
+
+    wp_add_inline_script('customize-controls', $script, 'after');
+}
+add_action('customize_controls_enqueue_scripts', 'werkstek_skip_svg_logo_cropping', 100);
 
 function vite_theme_has_manifest() {
     return file_exists(VITE_THEME_MANIFEST_PATH);
@@ -129,13 +202,22 @@ add_action('wp_enqueue_scripts', function() {
         wp_enqueue_style('werkstek-thema-styles', VITE_THEME_DEV_STYLES_PATH, [], null);
     }
 
-    if ((is_post_type_archive('kantoorruimte') || is_tax('locatie')) && WERKSTEK_GOOGLE_MAPS_API_KEY) {
+    if (
+        (is_post_type_archive('kantoorruimte') || is_tax('locatie'))
+        && defined('WERKSTEK_GOOGLE_MAPS_API_KEY')
+        && WERKSTEK_GOOGLE_MAPS_API_KEY !== ''
+    ) {
         wp_enqueue_script(
             'werkstek-google-maps',
-            'https://maps.googleapis.com/maps/api/js?key=' . rawurlencode(WERKSTEK_GOOGLE_MAPS_API_KEY) . '&v=weekly',
+            'https://maps.googleapis.com/maps/api/js?key=' . rawurlencode(WERKSTEK_GOOGLE_MAPS_API_KEY) . '&loading=async&callback=werkstekInitKantoorruimteMaps&v=weekly',
             [],
             null,
             true
+        );
+        wp_add_inline_script(
+            'werkstek-google-maps',
+            'window.werkstekInitKantoorruimteMaps=window.werkstekInitKantoorruimteMaps||function(){window.werkstekGoogleMapsReady=true;window.dispatchEvent(new Event("werkstek-google-maps-ready"));};',
+            'before'
         );
     }
 

@@ -19,6 +19,9 @@ $current_sort = isset($_GET['sort']) && sanitize_key(wp_unslash($_GET['sort'])) 
 $current_min_price = isset($_GET['prijs_min']) ? sanitize_text_field(wp_unslash($_GET['prijs_min'])) : '';
 $current_max_price = isset($_GET['prijs_max']) ? sanitize_text_field(wp_unslash($_GET['prijs_max'])) : '';
 $locatie_items = function_exists('werkstek_get_locatie_search_items') ? werkstek_get_locatie_search_items() : [];
+$map_kantoorruimtes = function_exists('werkstek_get_kantoorruimte_archive_map_items')
+    ? werkstek_get_kantoorruimte_archive_map_items()
+    : $kantoorruimtes;
 $queried_object = get_queried_object();
 $filter_action_url = $archive_url;
 
@@ -63,6 +66,7 @@ $map_items = array_map(function ($ruimte) {
         'id' => $ruimte['id'],
         'title' => $ruimte['title'],
         'url' => $ruimte['url'],
+        'image' => $ruimte['image'],
         'price' => $ruimte['price'],
         'location' => $ruimte['location'],
         'address' => $ruimte['address'],
@@ -75,7 +79,7 @@ $map_items = array_map(function ($ruimte) {
             'Nederland',
         ]))),
     ];
-}, $kantoorruimtes);
+}, $map_kantoorruimtes);
 ?>
 
 <section class="bg-surface" data-kantoorruimte-archive data-archive-view="list">
@@ -128,7 +132,7 @@ $map_items = array_map(function ($ruimte) {
 
                 <button
                     type="button"
-                    class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full border border-slate-200 bg-[#FCF8F3] text-slate-900 shadow-sm transition hover:border-slate-300 hover:bg-slate-50 xl:hidden"
+                    class="inline-flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#FCF8F3] text-slate-900 transition hover:border-slate-300 hover:bg-slate-50 xl:hidden"
                     data-archive-view-toggle
                     aria-label="Toon kaart"
                     aria-pressed="false"
@@ -235,11 +239,11 @@ $map_items = array_map(function ($ruimte) {
                 <nav class="mt-8 grid grid-cols-[1fr_auto_1fr] items-center gap-4" aria-label="Kantoorruimtes paginering">
                     <div class="justify-self-start">
                         <?php if ($current_page > 1): ?>
-                            <a href="<?php echo esc_url($pagination_url($current_page - 1)); ?>" class="inline-flex h-12 min-w-[124px] items-center justify-center rounded-full border border-slate-200 bg-[#FCF8F3] px-7 text-base font-medium text-slate-900 transition hover:border-slate-300 hover:bg-slate-50">
+                            <a href="<?php echo esc_url($pagination_url($current_page - 1)); ?>" class="inline-flex h-12 min-w-[124px] items-center justify-center rounded-full bg-[#FCF8F3] px-7 text-base font-medium text-slate-900 transition hover:border-slate-300 hover:bg-slate-50">
                                 Vorige
                             </a>
                         <?php else: ?>
-                            <span class="inline-flex h-12 min-w-[124px] items-center justify-center rounded-full border border-slate-200 bg-[#FCF8F3] px-7 text-base font-medium text-slate-400" aria-disabled="true">
+                            <span class="inline-flex h-12 min-w-[124px] items-center justify-center rounded-full bg-[#dcc4b4] px-7 text-base font-medium text-[#0f293a54]" aria-disabled="true">
                                 Vorige
                             </span>
                         <?php endif; ?>
@@ -251,11 +255,11 @@ $map_items = array_map(function ($ruimte) {
 
                     <div class="justify-self-end">
                         <?php if ($current_page < $total_pages): ?>
-                            <a href="<?php echo esc_url($pagination_url($current_page + 1)); ?>" class="inline-flex h-12 min-w-[124px] items-center justify-center rounded-full bg-slate-950 px-7 text-base font-medium text-white transition hover:bg-slate-800">
+                            <a href="<?php echo esc_url($pagination_url($current_page + 1)); ?>" class="inline-flex h-12 min-w-[124px] items-center justify-center rounded-full bg-surface-200 px-7 text-base font-medium text-dark-main transition hover:bg-white">
                                 Volgende
                             </a>
                         <?php else: ?>
-                            <span class="inline-flex h-12 min-w-[124px] items-center justify-center rounded-full bg-slate-200 px-7 text-base font-medium text-slate-400" aria-disabled="true">
+                            <span class="inline-flex h-12 min-w-[124px] items-center justify-center rounded-full bg-[#dcc4b4] px-7 text-base font-medium text-[#0f293a54]" aria-disabled="true">
                                 Volgende
                             </span>
                         <?php endif; ?>
@@ -271,7 +275,7 @@ $map_items = array_map(function ($ruimte) {
             </div>
         </div>
 
-        <aside class="hidden h-[calc(100vh-18.5rem)] min-h-[420px] xl:sticky xl:top-0 xl:block xl:h-[calc(100vh-7.5rem)]" data-archive-map-panel>
+        <aside class="hidden h-[100dvh] min-h-[420px] xl:sticky xl:top-0 xl:block xl:h-[100dvh]" data-archive-map-panel>
             <div
                 class="h-full w-full bg-slate-100"
                 data-kantoorruimte-map
@@ -298,13 +302,13 @@ $map_items = array_map(function ($ruimte) {
 
         <aside
             id="kantoorruimte-filter-panel"
-            class="filter-overlay__panel flex h-full w-full max-w-[425px] flex-col bg-[#FCF8F3] shadow-[-20px_0_60px_rgba(15,23,42,0.18)]"
+            class="filter-overlay__panel flex h-full w-full max-w-[425px] flex-col bg-surface"
             aria-modal="true"
             aria-label="Filters"
             role="dialog"
             tabindex="-1"
         >
-            <div class="flex items-center justify-between border-b border-slate-200 px-10 py-6 max-sm:px-6">
+            <div class="flex items-center justify-between border-b border-[#E6D1C0] px-10 py-6 max-sm:px-6">
                 <h2 class="text-lg font-bold text-slate-900">Filters</h2>
                 <button
                     type="button"
@@ -322,21 +326,23 @@ $map_items = array_map(function ($ruimte) {
             <form action="<?php echo esc_url($filter_action_url); ?>" method="get" class="flex min-h-0 flex-1 flex-col">
                 <div class="flex-1 overflow-y-auto px-10 py-12 max-sm:px-6">
                     <fieldset>
-                        <legend class="text-base font-bold text-slate-400">Sorteer op</legend>
+                        <legend class="text-base font-bold text-text-dark">Sorteer op</legend>
                         <div class="mt-4 flex flex-col gap-2">
                             <label class="filter-radio">
                                 <input type="radio" name="sort" value="populair" <?php checked($current_sort, 'populair'); ?>>
+                                <span class="filter-radio__indicator" aria-hidden="true"></span>
                                 <span>Populair</span>
                             </label>
                             <label class="filter-radio">
                                 <input type="radio" name="sort" value="nieuw" <?php checked($current_sort, 'nieuw'); ?>>
+                                <span class="filter-radio__indicator" aria-hidden="true"></span>
                                 <span>Nieuw</span>
                             </label>
                         </div>
                     </fieldset>
 
                     <div class="mt-14">
-                        <h3 class="text-base font-bold text-slate-400">Locatie</h3>
+                        <h3 class="text-base font-bold text-text-dark">Locatie</h3>
                         <div class="mt-5 flex flex-col items-start gap-2.5 text-base font-bold text-slate-900" data-filter-locations>
                             <a href="<?php echo esc_url($archive_url); ?>" class="transition hover:text-orange-500 <?php echo $archive_context === 'archive' ? 'text-orange-500' : ''; ?>">Alle locaties</a>
                             <?php foreach ($locatie_items as $index => $locatie): ?>
@@ -351,7 +357,7 @@ $map_items = array_map(function ($ruimte) {
                             <?php endforeach; ?>
 
                             <?php if (count($locatie_items) > 4): ?>
-                                <button type="button" class="mt-1 inline-flex items-center gap-1 font-bold text-slate-400 underline underline-offset-2 transition hover:text-orange-500" data-filter-locations-toggle>
+                                <button type="button" class="mt-1 inline-flex items-center gap-1 font-bold text-text-dark underline underline-offset-2 transition hover:text-orange-accent" data-filter-locations-toggle>
                                     <span data-filter-more-label>+ Meer tonen</span>
                                     <span class="hidden" data-filter-less-label>- Minder tonen</span>
                                 </button>
@@ -360,7 +366,7 @@ $map_items = array_map(function ($ruimte) {
                     </div>
 
                     <fieldset class="mt-14">
-                        <legend class="text-base font-bold text-slate-400">Prijs</legend>
+                        <legend class="text-base font-bold text-text-dark">Prijs</legend>
                         <div class="mt-5 flex items-center gap-4">
                             <label class="filter-price-input">
                                 <span>&euro;</span>

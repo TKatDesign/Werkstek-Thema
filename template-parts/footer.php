@@ -1,7 +1,7 @@
 <?php
 $site_name = get_bloginfo('name') ?: 'Werkstek';
 $skyline_banner = get_template_directory_uri() . '/resources/images/landscape.svg';
-$footer_logo = get_template_directory_uri() . '/resources/images/branding/werkstek-logo.png';
+$footer_logo = get_template_directory_uri() . '/resources/images/branding/werkstek-logo-final.svg';
 $steden = ['Amsterdam', 'Den haag', 'Rotterdam', 'Utrecht', 'Haarlem'];
 $stekjes = ['Computerweg 1', 'Het Ravelijn 50', 'Papiermolen 26', 'Databankweg 20', 'Simon Stevinweg 27'];
 $werkstek_links = [
@@ -11,11 +11,11 @@ $werkstek_links = [
     'Voor verhuurders' => '#',
     'Contact' => '#',
 ];
-$socials = [
-    'Instagram' => '#',
-    'Facebook' => '#',
-    'LinkedIn' => '#',
-];
+$socials = function_exists('get_field') ? array_filter([
+    'Instagram' => trim((string) get_field('footer_instagram_url', 'option')),
+    'Facebook' => trim((string) get_field('footer_facebook_url', 'option')),
+    'LinkedIn' => trim((string) get_field('footer_linkedin_url', 'option')),
+]) : [];
 ?>
 
 <footer class="relative mt-20 bg-[#EDD1B5] text-slate-900">
@@ -69,31 +69,35 @@ $socials = [
                     <p><a href="tel:0850290598" class="transition hover:text-orange-500">085 - 0290598</a></p>
                 </div>
 
-                <div class="mt-8 flex items-center gap-4">
-                    <?php foreach ($socials as $platform => $url): ?>
-                        <a
-                            href="<?php echo esc_url($url); ?>"
-                            aria-label="<?php echo esc_attr($platform); ?>"
-                            class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface text-slate-900 transition hover:-translate-y-0.5 hover:text-orange-500"
-                        >
-                            <?php if ($platform === 'Instagram'): ?>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
-                                    <rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect>
-                                    <circle cx="12" cy="12" r="3.5"></circle>
-                                    <circle cx="17.5" cy="6.5" r="1"></circle>
-                                </svg>
-                            <?php elseif ($platform === 'Facebook'): ?>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-current">
-                                    <path d="M13.5 21v-7h2.6l.4-3h-3V9.1c0-.9.3-1.6 1.7-1.6h1.5V4.8c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.3H8v3h2.5v7z"></path>
-                                </svg>
-                            <?php else: ?>
-                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-current">
-                                    <path d="M6.94 8.5H4V20h2.94zm.2-3a1.72 1.72 0 1 0-3.44 0 1.72 1.72 0 0 0 3.43 0ZM20 20h-2.93v-5.6c0-1.34-.03-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95V20H10.1V8.5h2.82v1.57h.04c.39-.74 1.35-1.52 2.78-1.52 2.98 0 3.53 1.96 3.53 4.51z"></path>
-                                </svg>
-                            <?php endif; ?>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
+                <?php if ($socials): ?>
+                    <div class="mt-8 flex items-center gap-4">
+                        <?php foreach ($socials as $platform => $url): ?>
+                            <a
+                                href="<?php echo esc_url($url); ?>"
+                                aria-label="<?php echo esc_attr($platform); ?>"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface text-slate-900 transition hover:-translate-y-0.5 hover:text-orange-500"
+                            >
+                                <?php if ($platform === 'Instagram'): ?>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">
+                                        <rect x="3.5" y="3.5" width="17" height="17" rx="5"></rect>
+                                        <circle cx="12" cy="12" r="3.5"></circle>
+                                        <circle cx="17.5" cy="6.5" r="1"></circle>
+                                    </svg>
+                                <?php elseif ($platform === 'Facebook'): ?>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-current">
+                                        <path d="M13.5 21v-7h2.6l.4-3h-3V9.1c0-.9.3-1.6 1.7-1.6h1.5V4.8c-.3 0-1.2-.1-2.3-.1-2.3 0-3.9 1.4-3.9 4v2.3H8v3h2.5v7z"></path>
+                                    </svg>
+                                <?php else: ?>
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-current">
+                                        <path d="M6.94 8.5H4V20h2.94zm.2-3a1.72 1.72 0 1 0-3.44 0 1.72 1.72 0 0 0 3.43 0ZM20 20h-2.93v-5.6c0-1.34-.03-3.05-1.86-3.05-1.86 0-2.14 1.45-2.14 2.95V20H10.1V8.5h2.82v1.57h.04c.39-.74 1.35-1.52 2.78-1.52 2.98 0 3.53 1.96 3.53 4.51z"></path>
+                                    </svg>
+                                <?php endif; ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 
@@ -106,6 +110,21 @@ $socials = [
         </div>
     </div>
 </footer>
+
+<a
+    href="https://wa.me/31655400370"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Neem contact op via WhatsApp"
+    class="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-white shadow-[0_12px_35px_rgba(15,41,58,0.22)] transition duration-200 hover:-translate-y-1 hover:shadow-[0_16px_40px_rgba(15,41,58,0.28)] focus:outline-none focus-visible:ring-2 focus-visible:ring-green-accent focus-visible:ring-offset-2 sm:bottom-8 sm:right-8 sm:h-16 sm:w-16"
+>
+    <img
+        src="<?php echo esc_url(get_template_directory_uri() . '/resources/images/selfhst_whatsapp.svg'); ?>"
+        alt=""
+        class="h-8 w-8 sm:h-9 sm:w-9"
+        aria-hidden="true"
+    >
+</a>
 
 <?php wp_footer(); ?>
 </body>

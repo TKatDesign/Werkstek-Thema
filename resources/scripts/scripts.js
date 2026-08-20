@@ -459,7 +459,7 @@ document.querySelectorAll('[data-projects-slider]').forEach((slider) => {
 const initKantoorruimteMaps = () => {
   const mapElements = document.querySelectorAll('[data-kantoorruimte-map]');
 
-  if (!mapElements.length || !window.google?.maps) return;
+  if (!mapElements.length || typeof window.google?.maps?.Map !== 'function') return;
 
   mapElements.forEach((mapElement) => {
     if (mapElement.dataset.mapReady === 'true') return;
@@ -521,21 +521,50 @@ const initKantoorruimteMaps = () => {
         map,
         position,
         title: item.title,
+        cursor: 'pointer',
       });
 
       setMarkerState(marker, false);
       bounds.extend(position);
       markersById.set(String(item.id), marker);
 
-      marker.addListener('click', () => {
-        const price = item.price ? `<p style="margin:4px 0 0;font-weight:700;color:#f97316;">${escapeHtml(item.price)}</p>` : '';
+      const showInfoWindow = () => {
+        const image = item.image
+          ? `<img src="${escapeHtml(item.image)}" alt="" style="display:block;width:220px;height:112px;object-fit:cover;">`
+          : '';
+        const address = item.address || item.title;
+        const location = item.location && !String(address).toLowerCase().includes(String(item.location).toLowerCase())
+          ? `<span style="display:block;margin-top:2px;color:#64748b;">${escapeHtml(item.location)}</span>`
+          : '';
+        const price = item.price
+          ? `<span style="display:block;margin-top:8px;font-weight:700;color:#fc6321;">Vanaf ${escapeHtml(String(item.price).replace(/^vanaf\s*/i, ''))}</span>`
+          : '';
+
         infoWindow.setContent(`
-          <a href="${encodeURI(item.url)}" style="display:block;min-width:180px;color:#102335;text-decoration:none;">
-            <strong style="font-size:14px;">${escapeHtml(item.title)}</strong>
-            ${price}
-          </a>
+          <div style="width:220px;overflow:hidden;border-radius:16px;background:#FCF8F3;color:#0F293A;box-shadow:0 12px 30px rgba(15,41,58,.16);">
+            ${image}
+            <div style="padding:14px 16px 16px;line-height:1.35;">
+              <strong style="display:block;font-size:14px;">${escapeHtml(address)}</strong>
+              ${location}
+              ${price}
+            </div>
+          </div>
         `);
-        infoWindow.open({ map, anchor: marker });
+        infoWindow.open({ map, anchor: marker, shouldFocus: false });
+      };
+
+      marker.addListener('mouseover', () => {
+        setMarkerState(marker, true);
+        showInfoWindow();
+      });
+
+      marker.addListener('mouseout', () => {
+        setMarkerState(marker, false);
+        infoWindow.close();
+      });
+
+      marker.addListener('click', () => {
+        window.location.href = item.url;
       });
 
       return marker;
@@ -576,7 +605,10 @@ const initKantoorruimteMaps = () => {
 
       window.setTimeout(() => {
         geocoder.geocode({ address: item.query || item.title }, (results, status) => {
-          if (status !== 'OK' || !results?.[0]) return;
+          if (status !== 'OK' || !results?.[0]) {
+            console.warn(`Geen kaartpositie gevonden voor ${item.title}: ${status}`);
+            return;
+          }
 
           createMarker(item, results[0].geometry.location);
           fitVisibleMarkers();
@@ -608,7 +640,10 @@ const initKantoorruimteMaps = () => {
   });
 };
 
+window.addEventListener('werkstek-google-maps-ready', initKantoorruimteMaps);
+window.werkstekInitKantoorruimteMaps = initKantoorruimteMaps;
 initKantoorruimteMaps();
+if (window.werkstekGoogleMapsReady) initKantoorruimteMaps();
 window.addEventListener('load', initKantoorruimteMaps);
 
 document.querySelectorAll('[data-kantoorruimte-archive]').forEach((archive) => {

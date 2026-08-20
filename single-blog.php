@@ -303,7 +303,7 @@ while (have_posts()) {
         <?php endif; ?>
 
         <section class="">
-            <div class="mx-auto max-w-4xl px-5 sm:px-6">
+            <div class="mx-auto max-w-3xl px-5 sm:px-6">
                 <div class="flex flex-wrap items-center gap-3">
                     <span class="mr-1 text-lg font-bold text-slate-900">Delen</span>
 

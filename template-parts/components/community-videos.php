@@ -43,26 +43,27 @@ if (empty($community_videos)) {
 }
 
 $component_id = 'community-videos-' . wp_unique_id();
-$default_active_index = count($community_videos) > 1 ? 1 : 0;
+$default_active_index = 0;
 ?>
 
 <section class="py-14 lg:py-24">
     <div class="mx-auto max-w-7xl px-5 sm:px-6">
         <div class="mx-auto max-w-4xl text-center">
-            <h2 class="text-4xl font-bold leading-tight text-slate-900 sm:text-5xl">
+            <h2 class="text-[2rem] font-bold leading-tight text-slate-900 sm:text-5xl">
                 <?php echo nl2br(esc_html($sectie_titel)); ?>
             </h2>
         </div>
 
-        <div class="mt-10 flex flex-wrap justify-center gap-4 lg:mt-12" data-community-video-tabs="<?php echo esc_attr($component_id); ?>" role="tablist" aria-label="Community videos">
-            <?php foreach ($community_videos as $index => $video): ?>
+        <div class="no-scrollbar -mx-5 mt-10 overflow-x-auto px-5 pb-2 sm:-mx-6 sm:px-6 lg:mx-0 lg:mt-12 lg:px-0" data-community-video-tabs="<?php echo esc_attr($component_id); ?>" role="tablist" aria-label="Community videos">
+            <div class="flex w-max min-w-full snap-x snap-mandatory flex-nowrap justify-center gap-4">
+                <?php foreach ($community_videos as $index => $video): ?>
                 <?php $is_active = $index === $default_active_index; ?>
                 <button
                     type="button"
                     id="<?php echo esc_attr($component_id . '-tab-' . $video['id']); ?>"
                     data-community-video-tab
                     data-panel-id="<?php echo esc_attr($component_id . '-panel-' . $video['id']); ?>"
-                    class="<?php echo $is_active ? 'border-orange-accent bg-[#FCF8F3]' : 'border-surface bg-[#FCF8F3]/80'; ?> inline-flex h-20 min-w-[110px] items-center justify-center rounded-[1.5rem] border px-6 transition hover:border-orange-accent hover:bg-[#FCF8F3]"
+                    class="<?php echo $is_active ? 'border-orange-accent bg-[#FCF8F3]' : 'border-surface bg-[#FCF8F3]/80'; ?> inline-flex h-20 min-w-[110px] shrink-0 snap-start items-center justify-center rounded-[1.5rem] border px-6 transition hover:border-orange-accent hover:bg-[#FCF8F3]"
                     role="tab"
                     aria-selected="<?php echo $is_active ? 'true' : 'false'; ?>"
                     aria-controls="<?php echo esc_attr($component_id . '-panel-' . $video['id']); ?>"
@@ -73,7 +74,8 @@ $default_active_index = count($community_videos) > 1 ? 1 : 0;
                         <span class="text-sm font-semibold text-slate-700"><?php echo esc_html($video['title']); ?></span>
                     <?php endif; ?>
                 </button>
-            <?php endforeach; ?>
+                <?php endforeach; ?>
+            </div>
         </div>
 
         <div class="mt-8 lg:mt-10" data-community-video-panels="<?php echo esc_attr($component_id); ?>">

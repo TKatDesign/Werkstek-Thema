@@ -71,7 +71,7 @@ $pagination_url = static function ($page) {
 
         <?php if ($total_pages > 1): ?>
             <nav class="mt-16 flex justify-center lg:mt-20" aria-label="Blog paginering">
-                <div class="inline-flex min-h-12 items-center gap-3 rounded-full bg-[#eeeeee] px-4 py-2 text-base font-semibold text-slate-400">
+                <div class="inline-flex min-h-12 items-center gap-3 rounded-full bg-white px-4 py-2 text-base font-semibold text-slate-400">
                     <?php if ($current_page > 1): ?>
                         <a href="<?php echo esc_url($pagination_url($current_page - 1)); ?>" class="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-900 transition hover:bg-[#FCF8F3]" aria-label="Vorige pagina">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-5 w-5 fill-none stroke-current stroke-2">

@@ -364,6 +364,13 @@ function werkstek_get_kantoorruimte_card_data($post_id) {
     $workspaces = werkstek_get_post_field_value($post_id, ['werkplekken', 'aantal_werkplekken', 'plekken']);
     $latitude = werkstek_get_post_field_value($post_id, ['latitude', 'lat', 'breedtegraad']);
     $longitude = werkstek_get_post_field_value($post_id, ['longitude', 'lng', 'long', 'lengtegraad']);
+
+    if (is_array($address)) {
+        $latitude = $latitude ?: ($address['lat'] ?? $address['latitude'] ?? '');
+        $longitude = $longitude ?: ($address['lng'] ?? $address['longitude'] ?? '');
+        $address = $address['address'] ?? $address['formatted_address'] ?? $address['name'] ?? '';
+    }
+
     $facilities = werkstek_get_kantoorruimte_facilities($post_id);
     $terms = get_the_terms($post_id, 'locatie');
     $location = '';
@@ -514,9 +521,10 @@ function werkstek_get_post_field_value($post_id, $keys) {
 }
 
 function werkstek_get_kantoorruimte_archive_items() {
-    global $werkstek_kantoorruimte_archive_pagination;
+    global $werkstek_kantoorruimte_archive_pagination, $werkstek_kantoorruimte_archive_map_items;
 
     $items = [];
+    $werkstek_kantoorruimte_archive_map_items = [];
     $per_page = 8;
     $paged = max(
         1,
@@ -601,6 +609,10 @@ function werkstek_get_kantoorruimte_archive_items() {
         return $second['date_timestamp'] <=> $first['date_timestamp'];
     });
 
+    // The list is paginated below, but the map should always contain every
+    // office that matches the current location and price filters.
+    $werkstek_kantoorruimte_archive_map_items = $items;
+
     $total_items = count($items);
     $total_pages = max(1, (int) ceil($total_items / $per_page));
     $paged = min($paged, $total_pages);
@@ -613,6 +625,14 @@ function werkstek_get_kantoorruimte_archive_items() {
     ];
 
     return array_slice($items, ($paged - 1) * $per_page, $per_page);
+}
+
+function werkstek_get_kantoorruimte_archive_map_items() {
+    global $werkstek_kantoorruimte_archive_map_items;
+
+    return is_array($werkstek_kantoorruimte_archive_map_items)
+        ? $werkstek_kantoorruimte_archive_map_items
+        : [];
 }
 
 function werkstek_get_kantoorruimte_archive_pagination() {

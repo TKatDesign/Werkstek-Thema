@@ -37,7 +37,7 @@ if ($kantoorruimtes_query->have_posts()) {
 <section class="py-16 sm:py-20 lg:py-24">
     <div class="mx-auto max-w-[1280px] px-5 sm:px-8 lg:px-16">
         <div class="mx-auto max-w-3xl text-center">
-            <h2 class="text-[2.5rem] font-bold leading-tight text-dark-main sm:text-5xl lg:text-[3rem]">
+            <h2 class="text-[2rem] font-bold leading-tight text-dark-main sm:text-5xl lg:text-[3rem]">
                 <?php echo esc_html($sectie_titel); ?>
             </h2>
         </div>

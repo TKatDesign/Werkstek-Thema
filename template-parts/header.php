@@ -100,11 +100,11 @@ $primary_menu_html = wp_nav_menu([
                 </div>
                 <a href="#" class="text-base font-medium text-slate-800 transition hover:text-orange-500">Community</a>
             </div>
-                <div class="werkstek-header-actions flex shrink-0 items-center gap-3 xl:gap-2">
+                <div class="werkstek-header-actions flex shrink-0 items-center gap-1.5 sm:gap-2 xl:gap-2">
                     <a
                         href="tel:0850290598"
                         aria-label="Bel Werkstek"
-                        class="werkstek-header-action inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface-200 transition hover:bg-white"
+                        class="werkstek-header-action inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface-200 transition hover:bg-white sm:h-12 sm:w-12"
                     >
                         <img src="<?php echo esc_url($phone_icon); ?>" alt="" class="h-5 w-5 object-contain" aria-hidden="true">
                     </a>
@@ -112,7 +112,7 @@ $primary_menu_html = wp_nav_menu([
                     <a
                         href="mailto:info@werkstek.nl"
                         aria-label="Mail Werkstek"
-                        class="werkstek-header-action inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface-200 transition hover:bg-white"
+                        class="werkstek-header-action inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface-200 transition hover:bg-white sm:h-12 sm:w-12"
                     >
                         <img src="<?php echo esc_url($nav_mail_icon); ?>" alt="" class="h-5 w-5 object-contain" aria-hidden="true">
                     </a>
@@ -120,9 +120,9 @@ $primary_menu_html = wp_nav_menu([
                     <button
                         type="button"
                         aria-label="Taal of locatie"
-                        class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface-200 transition hover:bg-white"
+                        class="werkstek-header-action inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface-200 transition hover:bg-white sm:h-12 sm:w-12"
                     >
-                        <img src="<?php echo esc_url($language_icon); ?>" alt="" class="h-7 w-7 object-contain" aria-hidden="true">
+                        <img src="<?php echo esc_url($language_icon); ?>" alt="" class="werkstek-header-language-icon h-[26px] w-[26px] object-contain" aria-hidden="true">
                     </button>
 
                     <button
@@ -131,9 +131,9 @@ $primary_menu_html = wp_nav_menu([
                         aria-controls="mobile-menu-panel"
                         aria-expanded="false"
                         data-menu-open
-                        class="inline-flex h-12 w-12 items-center justify-center rounded-full bg-surface-200 transition hover:bg-white"
+                        class="werkstek-header-action inline-flex h-10 w-10 items-center justify-center rounded-full bg-surface-200 transition hover:bg-white sm:h-12 sm:w-12"
                     >
-                        <img src="<?php echo esc_url($menu_icon); ?>" alt="" class="h-[22px] w-[22px] object-contain" aria-hidden="true">
+                        <img src="<?php echo esc_url($menu_icon); ?>" alt="" class="werkstek-header-menu-icon h-[22px] w-[22px] object-contain" aria-hidden="true">
                     </button>
                  </div>
         </div>
