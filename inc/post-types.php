@@ -1296,6 +1296,28 @@ function werkstek_handle_rondleiding_aanvraag() {
 
     $status = is_wp_error($aanvraag_id) ? 'error' : 'success';
 
+    if (! is_wp_error($aanvraag_id)) {
+        $recipients = [
+            'info@werkstek.nl',
+            'info@thomaskat.nl',
+        ];
+        $subject = sprintf('Nieuwe rondleiding aanvraag: %s', $kantoorruimte_title);
+        $message = implode("\n", [
+            'Er is een nieuwe rondleiding aangevraagd.',
+            '',
+            'Naam: ' . $name,
+            'E-mailadres: ' . $email,
+            'Telefoonnummer: ' . $phone,
+            'Kantoorruimte: ' . $kantoorruimte_title,
+            'Pagina: ' . get_permalink($post_id),
+        ]);
+        $headers = [
+            sprintf('Reply-To: %s <%s>', $name, $email),
+        ];
+
+        wp_mail($recipients, $subject, $message, $headers);
+    }
+
     wp_safe_redirect(add_query_arg('rondleiding', $status, $return_url));
     exit;
 }
