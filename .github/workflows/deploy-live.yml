@@ -1,4 +1,4 @@
-name: Deploy theme to live
+name: Deploy to Live
 
 on:
   workflow_dispatch:
@@ -8,8 +8,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
       - name: Install dependencies
         run: npm ci
@@ -17,12 +20,12 @@ jobs:
       - name: Build assets
         run: npm run build
 
-      - name: Deploy via SSH
-        uses: appleboy/scp-action@v0.1.7
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          host: ${{ secrets.FTP_HOST }}
+          server: 185.104.29.80
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
-          port: ${{ secrets.FTP_PORT }}
-          source: "."
-          target: "/domains/werkstek.nl/public_html/wp-content/themes/werkstek/"
+          protocol: ftps
+          local-dir: ./
+          server-dir: /public_html/wp-content/themes/werkstek-thema/
