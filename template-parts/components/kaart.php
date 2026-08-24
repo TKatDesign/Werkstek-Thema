@@ -41,7 +41,7 @@ if ($title === '') {
 }
 
 if ($text === '') {
-    $text = 'Transistorstraat 31 biedt een uitstekende locatie voor bedrijven, gelegen nabij afrit A6 en op slechts 20 minuten rijden van zowel Amsterdam als Hilversum. Dit kantoorverzamelgebouw is gunstig bereikbaar per auto en openbaar vervoer, met diverse metrages beschikbaar voor huurders van elke omvang.';
+    $text = 'Werkstek biedt kantoorruimtes op verschillende locaties door heel Nederland. Van een eigen kantoor tot een flexibele werkplek: ontdek onze locaties en vind de Werkstek die past bij jouw onderneming.';
 }
 
 $component_id = 'kaart-' . wp_unique_id();
