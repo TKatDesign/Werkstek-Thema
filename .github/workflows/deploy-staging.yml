@@ -1,9 +1,7 @@
-name: Deploy to Test
+name: Deploy to Live
 
 on:
-  push:
-    branches:
-      - staging
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -30,4 +28,4 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftps
           local-dir: ./
-          server-dir: /public_html/test/wp-content/themes/werkstek-thema/
+          server-dir: /public_html/wp-content/themes/werkstek-thema/
