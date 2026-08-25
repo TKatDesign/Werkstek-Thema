@@ -83,7 +83,7 @@ $bottom_row = $expand_row($bottom_row);
                         <img src="<?php echo esc_url($review['image']); ?>" alt="<?php echo esc_attr($review['name']); ?>" class="reviews-card__image">
                         <div class="min-w-0">
                             <div class="flex items-center gap-2 text-sm leading-none">
-                                <span class="truncate font-normal text-slate-400"><?php echo esc_html($review['name']); ?></span>
+                                <span class="truncate lg:font-normal font-sm text-slate-400"><?php echo esc_html($review['name']); ?></span>
                                 <?php if ($review['rating']): ?>
                                     <span class="inline-flex items-center gap-1 font-semibold text-slate-700">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-4 w-4 fill-orange-500 text-orange-500">
@@ -93,7 +93,7 @@ $bottom_row = $expand_row($bottom_row);
                                     </span>
                                 <?php endif; ?>
                             </div>
-                            <p class="mt-2 truncate text-base font-medium text-slate-900">
+                            <p class="mt-1 truncate lg:text-base text-sm font-medium text-slate-900">
                                 <?php echo esc_html($review['review']); ?>
                             </p>
                         </div>

@@ -494,8 +494,11 @@ const initKantoorruimteMaps = () => {
 
     const geocoder = new window.google.maps.Geocoder();
     const bounds = new window.google.maps.LatLngBounds();
-    const infoWindow = new window.google.maps.InfoWindow();
+    const infoWindow = new window.google.maps.InfoWindow({
+      headerDisabled: true,
+    });
     const markersById = new Map();
+    let selectedMarker = null;
     const escapeHtml = (value) => String(value || '').replace(/[&<>"']/g, (character) => ({
       '&': '&amp;',
       '<': '&lt;',
@@ -541,30 +544,26 @@ const initKantoorruimteMaps = () => {
           : '';
 
         infoWindow.setContent(`
-          <div style="width:220px;overflow:hidden;border-radius:16px;background:#FCF8F3;color:#0F293A;box-shadow:0 12px 30px rgba(15,41,58,.16);">
+          <a href="${escapeHtml(item.url)}" style="display:block;width:220px;overflow:hidden;border-radius:16px;background:#FCF8F3;color:#0F293A;box-shadow:0 12px 30px rgba(15,41,58,.16);text-decoration:none;">
             ${image}
             <div style="padding:14px 16px 16px;line-height:1.35;">
               <strong style="display:block;font-size:14px;">${escapeHtml(address)}</strong>
               ${location}
               ${price}
             </div>
-          </div>
+          </a>
         `);
         infoWindow.open({ map, anchor: marker, shouldFocus: false });
       };
 
-      marker.addListener('mouseover', () => {
+      marker.addListener('click', () => {
+        if (selectedMarker && selectedMarker !== marker) {
+          setMarkerState(selectedMarker, false);
+        }
+
+        selectedMarker = marker;
         setMarkerState(marker, true);
         showInfoWindow();
-      });
-
-      marker.addListener('mouseout', () => {
-        setMarkerState(marker, false);
-        infoWindow.close();
-      });
-
-      marker.addListener('click', () => {
-        window.location.href = item.url;
       });
 
       return marker;
@@ -596,24 +595,39 @@ const initKantoorruimteMaps = () => {
 
     geocodeCenter();
 
-    items.forEach((item, index) => {
+    const resolvePosition = (item) => {
       if (Number.isFinite(item.lat) && Number.isFinite(item.lng)) {
-        createMarker(item, { lat: item.lat, lng: item.lng });
-        fitVisibleMarkers();
-        return;
+        return Promise.resolve({ item, position: { lat: item.lat, lng: item.lng } });
       }
 
-      window.setTimeout(() => {
+      return new Promise((resolve) => {
         geocoder.geocode({ address: item.query || item.title }, (results, status) => {
           if (status !== 'OK' || !results?.[0]) {
             console.warn(`Geen kaartpositie gevonden voor ${item.title}: ${status}`);
+            resolve(null);
             return;
           }
 
-          createMarker(item, results[0].geometry.location);
-          fitVisibleMarkers();
+          resolve({ item, position: results[0].geometry.location });
         });
-      }, index * 160);
+      });
+    };
+
+    Promise.all(items.map(resolvePosition)).then((resolvedItems) => {
+      resolvedItems.filter(Boolean).forEach(({ item, position }) => {
+        createMarker(item, position);
+      });
+
+      fitVisibleMarkers();
+    });
+
+    map.addListener('click', () => {
+      infoWindow.close();
+
+      if (selectedMarker) {
+        setMarkerState(selectedMarker, false);
+        selectedMarker = null;
+      }
     });
 
     document.querySelectorAll('[data-map-card]').forEach((card) => {

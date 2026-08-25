@@ -191,7 +191,7 @@ $map_items = array_map(function ($ruimte) {
                                             <span class="inline-flex rounded-full bg-surface px-3 py-1 text-xs font-semibold text-slate-700">
                                                 Kantoorruimte
                                             </span>
-                                            <h2 class="mt-3 text-xl font-bold leading-tight text-slate-950">
+                                            <h2 class="mt-3 text-base lg:text-xl font-bold leading-tight text-slate-950">
                                                 <?php echo esc_html($ruimte['title']); ?><?php echo $ruimte['location'] ? ', ' . esc_html($ruimte['location']) : ''; ?>
                                             </h2>
                                         </div>

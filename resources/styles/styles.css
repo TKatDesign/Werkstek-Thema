@@ -482,7 +482,11 @@
     flex-shrink: 0;
     border-radius: 9999px;
     object-fit: cover;
-    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.12);
+
+    @media (max-width: 640px) {
+      height: 3rem;
+      width: 3rem;
+    }
   }
 
   @media (max-width: 640px) {
@@ -638,4 +642,20 @@
   to {
     transform: translate3d(0, 0, 0);
   }
+}
+
+/* Keep the office map popup limited to the custom card itself. */
+[data-kantoorruimte-map] .gm-style-iw-c {
+  padding: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+[data-kantoorruimte-map] .gm-style-iw-d {
+  overflow: hidden !important;
+}
+
+[data-kantoorruimte-map] .gm-style-iw-chr,
+[data-kantoorruimte-map] .gm-style-iw-tc {
+  display: none !important;
 }

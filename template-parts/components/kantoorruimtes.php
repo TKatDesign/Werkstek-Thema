@@ -77,7 +77,7 @@ if ($kantoorruimtes_query->have_posts()) {
                             ?>
                             <article class="min-w-[86vw] snap-center sm:min-w-[420px] lg:min-w-[calc((100%_-_4rem)/3)] lg:snap-start lg:flex-1">
                                 <a href="<?php echo esc_url($ruimte['url']); ?>" class="group block overflow-hidden rounded-[1.75rem] bg-[#FCF8F3] transition duration-300 hover:-translate-y-1">
-                                        <div class="relative h-[255px] overflow-hidden sm:h-[250px] lg:h-[250px]">
+                                        <div class="relative h-[200px] overflow-hidden sm:h-[250px] lg:h-[200px]">
                                             <img src="<?php echo esc_url($ruimte['image']); ?>" alt="<?php echo esc_attr($ruimte['title']); ?>" class="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy">
 
                                             <?php if ($show_new_label): ?>
@@ -87,12 +87,12 @@ if ($kantoorruimtes_query->have_posts()) {
                                             <?php endif; ?>
                                         </div>
 
-                                        <div class="px-6 py-7 sm:px-8">
+                                        <div class="px-5 py-5 sm:px-8">
                                             <div class="flex items-center gap-1 text-base font-bold text-slate-800 sm:text-base">
-                                                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 flex-none fill-none stroke-current stroke-[1.7] text-slate-600" aria-hidden="true">
+                                                <!-- <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6 flex-none fill-none stroke-current stroke-[1.7] text-slate-600" aria-hidden="true">
                                                     <path d="M12 21s6-4.35 6-10a6 6 0 1 0-12 0c0 5.65 6 10 6 10Z"></path>
                                                     <circle cx="12" cy="11" r="2.5"></circle>
-                                                </svg>
+                                                </svg> -->
                                                 <span class="truncate"><?php echo esc_html($card_location); ?></span>
                                             </div>
 

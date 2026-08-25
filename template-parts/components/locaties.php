@@ -63,7 +63,7 @@ if (empty($locaties)) {
             </div>
         </div>
 
-        <div class="mt-10 grid gap-5 lg:mt-14 lg:grid-cols-3 sm:grid-cols-2">
+        <div class="mt-10 grid gap-3 lg:gap-5 lg:mt-14 lg:grid-cols-3 sm:grid-cols-2">
             <?php foreach ($locaties as $locatie): ?>
                 <a
                     href="<?php echo esc_url($locatie['url']); ?>"
@@ -72,14 +72,14 @@ if (empty($locaties)) {
                     <img
                         src="<?php echo esc_url($locatie['image']); ?>"
                         alt="<?php echo esc_attr($locatie['name']); ?>"
-                        class="h-20 w-20 shrink-0 rounded-[1.25rem] object-cover"
+                        class="h-16 w-16 lg:h-20 lg:w-20 shrink-0 rounded-[1.25rem] object-cover"
                     >
 
                     <div class="min-w-0 flex-1">
-                        <h3 class="truncate text-xl font-bold text-slate-900">
+                        <h3 class="truncate text-base lg:text-xl font-bold text-slate-900">
                             <?php echo esc_html($locatie['name']); ?>
                         </h3>
-                        <p class="mt-2 text-base text-slate-400">
+                        <p class="mt-2 text-sm lg:text-base text-slate-400">
                             <?php echo esc_html($locatie['count_label']); ?>
                         </p>
                     </div>

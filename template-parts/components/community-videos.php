@@ -90,7 +90,7 @@ $default_active_index = 0;
                 >
                     <div class="community-video-player mx-auto max-w-4xl overflow-hidden rounded-[2.25rem] bg-slate-900 shadow-[0_28px_70px_rgba(15,23,42,0.16)]" data-community-video-player>
                         <?php if ($video['video_type'] === 'youtube' && $video['youtube_embed_url']): ?>
-                            <div class="aspect-video">
+                            <div class="lg:aspect-video aspect-[16/12]">
                                 <iframe
                                     src="<?php echo esc_url($video['youtube_embed_url']); ?>"
                                     title="<?php echo esc_attr($video['title']); ?>"
