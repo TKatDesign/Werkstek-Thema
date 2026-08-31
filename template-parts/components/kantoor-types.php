@@ -1,6 +1,7 @@
 <?php
 $blokken = ['blok_1', 'blok_2', 'blok_3'];
 $standaard_titels = ['Kantoorruimtes', 'Vergaderruimtes', 'Werkplekken'];
+$standaard_link = home_url('/kantoorruimte-huren/');
 $kantoor_types = [];
 
 foreach ($blokken as $index => $blok_key) {
@@ -10,8 +11,8 @@ foreach ($blokken as $index => $blok_key) {
         $blok = [];
     }
 
-    $link = $blok['link'] ?? $blok['button_link'] ?? $blok['url'] ?? '#';
-    $link_url = is_array($link) ? ($link['url'] ?? '#') : $link;
+    $link = $blok['link'] ?? $blok['button_link'] ?? $blok['url'] ?? $standaard_link;
+    $link_url = is_array($link) ? ($link['url'] ?? $standaard_link) : $link;
     $link_target = is_array($link) ? ($link['target'] ?? '_self') : '_self';
     $icoon = $blok['afbeelding'] ?? null;
     $icoon_url = '';
@@ -29,7 +30,7 @@ foreach ($blokken as $index => $blok_key) {
 
     $kantoor_types[] = [
         'title' => $blok['titel'] ?? $standaard_titels[$index],
-        'url' => $link_url ?: '#',
+        'url' => $link_url ?: $standaard_link,
         'target' => $link_target,
         'icon' => $icoon_url,
         'icon_alt' => $icoon_alt,

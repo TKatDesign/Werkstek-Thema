@@ -311,7 +311,11 @@ add_action('locatie_edit_form_fields', 'werkstek_locatie_edit_description_editor
 function werkstek_save_locatie_description_html($term_id) {
     static $is_saving = false;
 
-    if ($is_saving || ! isset($_POST['locatie_description_html'])) {
+    if (
+        $is_saving
+        || ! current_user_can('edit_term', $term_id)
+        || ! isset($_POST['locatie_description_html'])
+    ) {
         return;
     }
 
@@ -898,11 +902,17 @@ function werkstek_locatie_edit_image_field($term) {
 add_action('locatie_edit_form_fields', 'werkstek_locatie_edit_image_field');
 
 function werkstek_save_locatie_image($term_id) {
-    if (! isset($_POST['afbeelding'])) {
+    if (! current_user_can('edit_term', $term_id) || ! isset($_POST['afbeelding'])) {
         return;
     }
 
-    update_term_meta($term_id, 'afbeelding', absint($_POST['afbeelding']));
+    $image_id = absint(wp_unslash($_POST['afbeelding']));
+
+    if ($image_id && ! wp_attachment_is_image($image_id)) {
+        return;
+    }
+
+    update_term_meta($term_id, 'afbeelding', $image_id);
 }
 add_action('created_locatie', 'werkstek_save_locatie_image');
 add_action('edited_locatie', 'werkstek_save_locatie_image');
@@ -939,7 +949,11 @@ function werkstek_enqueue_locatie_admin_media($hook_suffix) {
 
             const renderPreview = (attachment) => {
                 imageField.value = attachment.id;
-                preview.innerHTML = '<img src=\"' + attachment.url + '\" alt=\"\" style=\"width:96px;height:96px;object-fit:cover;border-radius:16px;box-shadow:0 8px 18px rgba(15,23,42,0.12);\">';
+                const image = document.createElement('img');
+                image.src = attachment.url;
+                image.alt = '';
+                image.style.cssText = 'width:96px;height:96px;object-fit:cover;border-radius:16px;box-shadow:0 8px 18px rgba(15,23,42,0.12);';
+                preview.replaceChildren(image);
                 removeButton.style.display = 'inline-block';
             };
 
@@ -1103,11 +1117,18 @@ function werkstek_blog_categorie_edit_icon_field($term) {
 add_action('blog_categorie_edit_form_fields', 'werkstek_blog_categorie_edit_icon_field');
 
 function werkstek_save_blog_categorie_icon($term_id) {
-    if (! isset($_POST['icoon'])) {
+    if (! current_user_can('edit_term', $term_id) || ! isset($_POST['icoon'])) {
         return;
     }
 
-    update_term_meta($term_id, 'icoon', absint($_POST['icoon']));
+    $icon_id = absint(wp_unslash($_POST['icoon']));
+    $icon_mime = $icon_id ? (string) get_post_mime_type($icon_id) : '';
+
+    if ($icon_id && strpos($icon_mime, 'image/') !== 0) {
+        return;
+    }
+
+    update_term_meta($term_id, 'icoon', $icon_id);
 }
 add_action('created_blog_categorie', 'werkstek_save_blog_categorie_icon');
 add_action('edited_blog_categorie', 'werkstek_save_blog_categorie_icon');
@@ -1142,7 +1163,11 @@ function werkstek_enqueue_blog_categorie_admin_media($hook_suffix) {
 
             const renderPreview = (attachment) => {
                 iconField.value = attachment.id;
-                preview.innerHTML = '<img src=\"' + attachment.url + '\" alt=\"\" style=\"width:40px;height:40px;object-fit:contain;border-radius:9999px;background: #FCF8F3;box-shadow:0 8px 18px rgba(15,23,42,0.12);padding:8px;\">';
+                const image = document.createElement('img');
+                image.src = attachment.url;
+                image.alt = '';
+                image.style.cssText = 'width:40px;height:40px;object-fit:contain;border-radius:9999px;background:#FCF8F3;box-shadow:0 8px 18px rgba(15,23,42,0.12);padding:8px;';
+                preview.replaceChildren(image);
                 removeButton.style.display = 'inline-block';
             };
 
@@ -1238,7 +1263,39 @@ function werkstek_verify_recaptcha_response($token) {
 
     $result = json_decode(wp_remote_retrieve_body($response), true);
 
-    return is_array($result) && ! empty($result['success']);
+    if (! is_array($result) || empty($result['success']) || empty($result['hostname'])) {
+        return false;
+    }
+
+    $expected_hostname = strtolower((string) wp_parse_url(home_url('/'), PHP_URL_HOST));
+    $verified_hostname = strtolower((string) $result['hostname']);
+    $allowed_hostnames = (array) apply_filters('werkstek_recaptcha_allowed_hostnames', [$expected_hostname]);
+    $allowed_hostnames = array_filter(array_map('strtolower', $allowed_hostnames));
+
+    return $expected_hostname !== '' && in_array($verified_hostname, $allowed_hostnames, true);
+}
+
+function werkstek_rondleiding_form_signature($timestamp, $post_id) {
+    return hash_hmac('sha256', $timestamp . '|' . $post_id, wp_salt('nonce'));
+}
+
+function werkstek_rondleiding_is_rate_limited() {
+    $ip_address = isset($_SERVER['REMOTE_ADDR']) ? sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'])) : '';
+
+    if ($ip_address === '') {
+        return false;
+    }
+
+    $key = 'werkstek_tour_rate_' . substr(hash_hmac('sha256', $ip_address, wp_salt('auth')), 0, 32);
+    $attempts = (int) get_transient($key);
+
+    if ($attempts >= 5) {
+        return true;
+    }
+
+    set_transient($key, $attempts + 1, 15 * MINUTE_IN_SECONDS);
+
+    return false;
 }
 
 function werkstek_handle_rondleiding_aanvraag() {
@@ -1258,6 +1315,26 @@ function werkstek_handle_rondleiding_aanvraag() {
         exit;
     }
 
+    $honeypot = isset($_POST['website']) ? trim((string) wp_unslash($_POST['website'])) : '';
+    $form_timestamp = isset($_POST['werkstek_form_time']) ? absint($_POST['werkstek_form_time']) : 0;
+    $form_signature = isset($_POST['werkstek_form_signature'])
+        ? sanitize_text_field(wp_unslash($_POST['werkstek_form_signature']))
+        : '';
+    $form_age = time() - $form_timestamp;
+    $expected_signature = werkstek_rondleiding_form_signature($form_timestamp, $post_id);
+
+    if (
+        $honeypot !== ''
+        || $form_timestamp <= 0
+        || $form_age < 3
+        || $form_age > DAY_IN_SECONDS
+        || ! hash_equals($expected_signature, $form_signature)
+        || werkstek_rondleiding_is_rate_limited()
+    ) {
+        wp_safe_redirect(add_query_arg('rondleiding', 'spam-error', $return_url));
+        exit;
+    }
+
     $recaptcha_token = isset($_POST['g-recaptcha-response'])
         ? sanitize_text_field(wp_unslash($_POST['g-recaptcha-response']))
         : '';
@@ -1272,8 +1349,31 @@ function werkstek_handle_rondleiding_aanvraag() {
     $phone = isset($_POST['telefoonnummer']) ? sanitize_text_field(wp_unslash($_POST['telefoonnummer'])) : '';
     $privacy_accepted = isset($_POST['privacy_akkoord']) && wp_unslash($_POST['privacy_akkoord']) === '1';
 
-    if ($name === '' || $email === '' || ! is_email($email) || $phone === '' || ! $privacy_accepted) {
+    $phone_digits = preg_replace('/\D+/', '', $phone);
+    $contains_link = preg_match('/(?:https?:\/\/|www\.|\[[^\]]*url|<a\b)/i', $name . ' ' . $phone);
+
+    if (
+        $name === ''
+        || strlen($name) > 100
+        || $email === ''
+        || strlen($email) > 254
+        || ! is_email($email)
+        || $phone === ''
+        || strlen($phone) > 40
+        || strlen($phone_digits) < 7
+        || strlen($phone_digits) > 15
+        || $contains_link
+        || ! $privacy_accepted
+    ) {
         wp_safe_redirect(add_query_arg('rondleiding', 'error', $return_url));
+        exit;
+    }
+
+    $submission_fingerprint = hash_hmac('sha256', strtolower($email) . '|' . $phone_digits . '|' . $post_id, wp_salt('auth'));
+    $duplicate_key = 'werkstek_tour_duplicate_' . substr($submission_fingerprint, 0, 32);
+
+    if (get_transient($duplicate_key)) {
+        wp_safe_redirect(add_query_arg('rondleiding', 'success', $return_url));
         exit;
     }
 
@@ -1297,6 +1397,8 @@ function werkstek_handle_rondleiding_aanvraag() {
     $status = is_wp_error($aanvraag_id) ? 'error' : 'success';
 
     if (! is_wp_error($aanvraag_id)) {
+        set_transient($duplicate_key, '1', HOUR_IN_SECONDS);
+
         $recipients = [
             'info@werkstek.nl',
             'info@thomaskat.nl',

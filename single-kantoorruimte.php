@@ -312,6 +312,8 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id = 0) {
                                     </p>
                                 <?php elseif ($rondleiding_status === 'captcha-error'): ?>
                                     <p class="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">De reCAPTCHA-controle is mislukt. Probeer het opnieuw.</p>
+                                <?php elseif ($rondleiding_status === 'spam-error'): ?>
+                                    <p class="mt-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">De aanvraag kon niet worden verstuurd. Wacht even en probeer het opnieuw.</p>
                                 <?php elseif ($rondleiding_status === 'error'): ?>
                                     <p class="mt-6 rounded-2xl bg-orange-100 px-4 py-3 text-sm font-medium text-orange-600">
                                         Vul alle verplichte velden correct in.
@@ -450,23 +452,31 @@ function werkstek_single_related_kantoorruimtes($post_id, $term_id = 0) {
                 </div>
 
                 <form class="-mr-2 mt-6 min-h-0 flex-1 space-y-7 overflow-y-auto pb-1 pr-2 sm:mt-8" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" method="post">
+                    <?php $werkstek_form_time = time(); ?>
                     <input type="hidden" name="action" value="werkstek_rondleiding_aanvraag">
                     <input type="hidden" name="kantoorruimte_id" value="<?php echo esc_attr($post_id); ?>">
+                    <input type="hidden" name="werkstek_form_time" value="<?php echo esc_attr($werkstek_form_time); ?>">
+                    <input type="hidden" name="werkstek_form_signature" value="<?php echo esc_attr(werkstek_rondleiding_form_signature($werkstek_form_time, $post_id)); ?>">
                     <?php wp_nonce_field('werkstek_rondleiding_aanvraag_' . $post_id, 'werkstek_rondleiding_nonce'); ?>
+
+                    <div class="absolute -left-[10000px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
+                        <label for="werkstek-website-<?php echo esc_attr($post_id); ?>">Website</label>
+                        <input id="werkstek-website-<?php echo esc_attr($post_id); ?>" type="text" name="website" value="" tabindex="-1" autocomplete="off">
+                    </div>
 
                     <label class="block">
                         <span class="text-base font-medium text-slate-900">Naam <span class="text-orange-500">*</span></span>
-                        <input type="text" name="naam" required autocomplete="name" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-[#FCF8F3] px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
+                        <input type="text" name="naam" required maxlength="100" autocomplete="name" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-[#FCF8F3] px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
                     </label>
 
                     <label class="block">
                         <span class="text-base font-medium text-slate-900">E-mailadres <span class="text-orange-500">*</span></span>
-                        <input type="email" name="emailadres" required autocomplete="email" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-[#FCF8F3] px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
+                        <input type="email" name="emailadres" required maxlength="254" autocomplete="email" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-[#FCF8F3] px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
                     </label>
 
                     <label class="block">
                         <span class="text-base font-medium text-slate-900">Telefoonnummer <span class="text-orange-500">*</span></span>
-                        <input type="tel" name="telefoonnummer" required autocomplete="tel" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-[#FCF8F3] px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
+                        <input type="tel" name="telefoonnummer" required maxlength="40" autocomplete="tel" class="mt-3 h-12 w-full rounded-lg border border-slate-200 bg-[#FCF8F3] px-5 text-base text-slate-900 shadow-sm outline-none transition focus:border-orange-400 focus:ring-2 focus:ring-orange-200">
                     </label>
 
                     <?php if (defined('WERKSTEK_RECAPTCHA_SITE_KEY') && WERKSTEK_RECAPTCHA_SITE_KEY !== ''): ?>

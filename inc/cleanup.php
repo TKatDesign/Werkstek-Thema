@@ -13,3 +13,15 @@ add_action('after_setup_theme', function () {
         wp_dequeue_style('global-styles');
     }, 100);
 });
+
+function werkstek_send_security_headers() {
+    if (headers_sent()) {
+        return;
+    }
+
+    header('X-Content-Type-Options: nosniff');
+    header('X-Frame-Options: SAMEORIGIN');
+    header('Referrer-Policy: strict-origin-when-cross-origin');
+    header('Permissions-Policy: camera=(), microphone=(), geolocation=()');
+}
+add_action('send_headers', 'werkstek_send_security_headers');

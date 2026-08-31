@@ -13,9 +13,10 @@ define('VITE_THEME_DEV_SCRIPTS_PATH', VITE_THEME_DEV_SERVER . '/resources/script
 define('VITE_THEME_DEV_STYLES_PATH', VITE_THEME_DEV_SERVER . '/resources/styles/styles.css');
 
 function werkstek_allow_svg_uploads($mimes) {
-    if (current_user_can('upload_files')) {
+    // SVG can contain active content. Keep uploads limited to trusted admins;
+    // the SVG Support plugin performs the actual sanitisation.
+    if (current_user_can('manage_options')) {
         $mimes['svg'] = 'image/svg+xml';
-        $mimes['svgz'] = 'image/svg+xml';
     }
 
     return $mimes;
@@ -25,7 +26,7 @@ add_filter('upload_mimes', 'werkstek_allow_svg_uploads');
 function werkstek_fix_svg_filetype_check($data, $file, $filename, $mimes) {
     $extension = strtolower(pathinfo($filename, PATHINFO_EXTENSION));
 
-    if (in_array($extension, ['svg', 'svgz'], true)) {
+    if ($extension === 'svg' && current_user_can('manage_options')) {
         return [
             'ext' => $extension,
             'type' => 'image/svg+xml',
@@ -44,7 +45,7 @@ add_filter('wp_check_filetype_and_ext', 'werkstek_fix_svg_filetype_check', 10, 4
  * sanitisation afterwards.
  */
 function werkstek_allow_svg_in_acf_image_fields($errors, $file, $attachment, $field, $context) {
-    if (! current_user_can('upload_files') || ! is_array($errors)) {
+    if (! current_user_can('manage_options') || ! is_array($errors)) {
         return $errors;
     }
 
@@ -149,6 +150,21 @@ function vite_theme_has_manifest() {
 
 function vite_theme_is_dev_server_available() {
     static $available = null;
+
+    // Never let a service listening on localhost inject development assets on
+    // staging or production installations. WordPress uses "local" for tools
+    // such as Local and "development" for regular development environments.
+    $environment_type = function_exists('wp_get_environment_type')
+        ? wp_get_environment_type()
+        : '';
+
+    if (
+        ! defined('WP_DEBUG')
+        || ! WP_DEBUG
+        || ! in_array($environment_type, ['local', 'development'], true)
+    ) {
+        return false;
+    }
 
     if ($available !== null) {
         return $available;
