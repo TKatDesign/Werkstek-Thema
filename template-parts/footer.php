@@ -2,7 +2,8 @@
 $site_name = get_bloginfo('name') ?: 'Werkstek';
 $skyline_banner = get_template_directory_uri() . '/resources/images/landscape.svg';
 $footer_logo = get_template_directory_uri() . '/resources/images/branding/werkstek-logo-final.svg';
-$steden = ['Amsterdam', 'Den haag', 'Rotterdam', 'Utrecht', 'Haarlem'];
+$archive_url = get_post_type_archive_link('kantoorruimte') ?: home_url('/kantoorruimte-huren/');
+$steden = ['Amsterdam', 'Den Haag', 'Rotterdam', 'Utrecht', 'Haarlem'];
 $stekjes = ['Computerweg 1', 'Het Ravelijn 50', 'Papiermolen 26', 'Databankweg 20', 'Simon Stevinweg 27'];
 $werkstek_links = [
     'Kantoorruimte huren' => get_post_type_archive_link('kantoorruimte') ?: '#',
@@ -11,11 +12,43 @@ $werkstek_links = [
     'Voor verhuurders' => '#',
     'Contact' => '#',
 ];
+$get_city_url = static function ($city) use ($archive_url) {
+    $term = get_term_by('slug', sanitize_title($city), 'locatie');
+    $term_url = $term instanceof WP_Term ? get_term_link($term) : '';
+
+    return ! is_wp_error($term_url) && $term_url
+        ? $term_url
+        : add_query_arg('locatie', sanitize_title($city), $archive_url);
+};
+$get_spot_url = static function ($spot) use ($archive_url) {
+    $posts = get_posts([
+        'post_type' => 'kantoorruimte',
+        'post_status' => 'publish',
+        'title' => $spot,
+        'posts_per_page' => 1,
+        'fields' => 'ids',
+        'no_found_rows' => true,
+    ]);
+
+    return $posts ? get_permalink($posts[0]) : add_query_arg('locatie', $spot, $archive_url);
+};
 $socials = function_exists('get_field') ? array_filter([
     'Instagram' => trim((string) get_field('footer_instagram_url', 'option')),
     'Facebook' => trim((string) get_field('footer_facebook_url', 'option')),
     'LinkedIn' => trim((string) get_field('footer_linkedin_url', 'option')),
 ]) : [];
+$terms_file = function_exists('get_field') ? get_field('algemene_voorwaarden', 'option') : null;
+$terms_url = '';
+
+if (is_array($terms_file)) {
+    $terms_url = (string) ($terms_file['url'] ?? '');
+} elseif (is_numeric($terms_file)) {
+    $terms_url = (string) wp_get_attachment_url((int) $terms_file);
+} elseif (is_string($terms_file)) {
+    $terms_url = $terms_file;
+}
+
+$terms_url = $terms_url ?: home_url('/algemene-voorwaarden/');
 ?>
 
 <footer class="relative mt-20 bg-[#EDD1B5] text-slate-900">
@@ -33,33 +66,59 @@ $socials = function_exists('get_field') ? array_filter([
         <div class="mt-16 grid gap-12 md:grid-cols-2 xl:grid-cols-4">
             <div>
                 <h2 class="text-2xl font-bold text-slate-900">Populairste steden</h2>
-                <ul class="mt-6 space-y-4 text-lg text-slate-700">
-                    <?php foreach ($steden as $stad): ?>
-                        <li><?php echo esc_html($stad); ?></li>
-                    <?php endforeach; ?>
-                </ul>
+                <?php if (has_nav_menu('footer_cities')): ?>
+                    <?php wp_nav_menu([
+                        'theme_location' => 'footer_cities',
+                        'container' => false,
+                        'menu_class' => 'mt-6 space-y-4 text-lg text-slate-700',
+                        'fallback_cb' => false,
+                        'depth' => 1,
+                    ]); ?>
+                <?php else: ?>
+                    <ul class="mt-6 space-y-4 text-lg text-slate-700">
+                        <?php foreach ($steden as $stad): ?>
+                            <li><a href="<?php echo esc_url($get_city_url($stad)); ?>" class="transition hover:text-orange-500"><?php echo esc_html($stad); ?></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
 
             <div>
                 <h2 class="text-2xl font-bold text-slate-900">Populairste stekjes</h2>
-                <ul class="mt-6 space-y-4 text-lg text-slate-700">
-                    <?php foreach ($stekjes as $stekje): ?>
-                        <li><?php echo esc_html($stekje); ?></li>
-                    <?php endforeach; ?>
-                </ul>
+                <?php if (has_nav_menu('footer_spots')): ?>
+                    <?php wp_nav_menu([
+                        'theme_location' => 'footer_spots',
+                        'container' => false,
+                        'menu_class' => 'mt-6 space-y-4 text-lg text-slate-700',
+                        'fallback_cb' => false,
+                        'depth' => 1,
+                    ]); ?>
+                <?php else: ?>
+                    <ul class="mt-6 space-y-4 text-lg text-slate-700">
+                        <?php foreach ($stekjes as $stekje): ?>
+                            <li><a href="<?php echo esc_url($get_spot_url($stekje)); ?>" class="transition hover:text-orange-500"><?php echo esc_html($stekje); ?></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
 
             <div>
                 <h2 class="text-2xl font-bold text-slate-900">Werkstek</h2>
-                <ul class="mt-6 space-y-4 text-lg text-slate-700">
-                    <?php foreach ($werkstek_links as $label => $url): ?>
-                        <li>
-                            <a href="<?php echo esc_url($url); ?>" class="transition hover:text-orange-500">
-                                <?php echo esc_html($label); ?>
-                            </a>
-                        </li>
-                    <?php endforeach; ?>
-                </ul>
+                <?php if (has_nav_menu('footer_werkstek')): ?>
+                    <?php wp_nav_menu([
+                        'theme_location' => 'footer_werkstek',
+                        'container' => false,
+                        'menu_class' => 'mt-6 space-y-4 text-lg text-slate-700',
+                        'fallback_cb' => false,
+                        'depth' => 1,
+                    ]); ?>
+                <?php else: ?>
+                    <ul class="mt-6 space-y-4 text-lg text-slate-700">
+                        <?php foreach ($werkstek_links as $label => $url): ?>
+                            <li><a href="<?php echo esc_url($url); ?>" class="transition hover:text-orange-500"><?php echo esc_html($label); ?></a></li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php endif; ?>
             </div>
 
             <div>
@@ -104,8 +163,18 @@ $socials = function_exists('get_field') ? array_filter([
         <div class="mt-16 flex flex-col gap-4 border-t border-slate-300/60 pt-8 text-base text-slate-600 md:flex-row md:items-center md:justify-between">
             <p>Copyright Werkstek &copy; <?php echo esc_html(wp_date('Y')); ?></p>
             <div class="flex flex-wrap items-center gap-6">
-                <a href="#" class="transition hover:text-orange-500">Algemene voorwaarden</a>
-                <a href="#" class="transition hover:text-orange-500">Privacy verklaring</a>
+                <a href="<?php echo esc_url($terms_url); ?>" target="_blank" rel="noopener noreferrer" class="transition hover:text-orange-500">Algemene voorwaarden</a>
+                <?php if (has_nav_menu('footer_legal')): ?>
+                    <?php wp_nav_menu([
+                        'theme_location' => 'footer_legal',
+                        'container' => false,
+                        'menu_class' => 'flex flex-wrap items-center gap-6',
+                        'fallback_cb' => false,
+                        'depth' => 1,
+                    ]); ?>
+                <?php else: ?>
+                    <a href="<?php echo esc_url(get_privacy_policy_url() ?: home_url('/privacyverklaring/')); ?>" class="transition hover:text-orange-500">Privacy verklaring</a>
+                <?php endif; ?>
             </div>
         </div>
     </div>

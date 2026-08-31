@@ -18,9 +18,25 @@ function werkstek_thema_setup() {
 
     register_nav_menus([
         'primary' => __('Hoofdmenu', 'werkstek-thema'),
+        'footer_cities' => __('Footer - Populairste steden', 'werkstek-thema'),
+        'footer_spots' => __('Footer - Populairste stekjes', 'werkstek-thema'),
+        'footer_werkstek' => __('Footer - Werkstek', 'werkstek-thema'),
+        'footer_legal' => __('Footer - Juridische links', 'werkstek-thema'),
     ]);
 }
 add_action('after_setup_theme', 'werkstek_thema_setup');
+
+function werkstek_footer_menu_link_attributes($attributes, $menu_item, $args) {
+    $footer_locations = ['footer_cities', 'footer_spots', 'footer_werkstek', 'footer_legal'];
+    $theme_location = isset($args->theme_location) ? (string) $args->theme_location : '';
+
+    if (in_array($theme_location, $footer_locations, true)) {
+        $attributes['class'] = trim(($attributes['class'] ?? '') . ' transition hover:text-orange-500');
+    }
+
+    return $attributes;
+}
+add_filter('nav_menu_link_attributes', 'werkstek_footer_menu_link_attributes', 10, 3);
 
 function vite($entry) {
     static $clientInjected = false;

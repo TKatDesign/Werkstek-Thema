@@ -65,5 +65,9 @@
             <?php get_template_part('template-parts/components/community-videos'); ?>
         <?php endif; ?>
 
+        <?php if (in_array(get_row_layout(), ['simpel_content', 'simpel-content'], true)): ?>
+            <?php get_template_part('template-parts/components/simpel-content'); ?>
+        <?php endif; ?>
+
     <?php endwhile; ?>
 <?php endif; ?>
