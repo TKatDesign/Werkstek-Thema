@@ -398,6 +398,7 @@ function werkstek_get_kantoorruimte_card_data($post_id) {
         'position' => 'background-position: center center;',
         'is_new' => false,
         'is_popular' => werkstek_is_popular_field_checked($popular_field),
+        'menu_order' => (int) get_post_field('menu_order', $post_id),
         'date_timestamp' => (int) get_post_time('U', true, $post_id),
         'excerpt' => get_the_excerpt($post_id),
         'address' => $address,
@@ -540,8 +541,10 @@ function werkstek_get_kantoorruimte_archive_items() {
         'post_type' => 'kantoorruimte',
         'post_status' => 'publish',
         'posts_per_page' => -1,
-        'orderby' => 'date',
-        'order' => 'DESC',
+        'orderby' => [
+            'menu_order' => 'ASC',
+            'date' => 'DESC',
+        ],
     ];
 
     if (is_tax('locatie')) {
@@ -606,8 +609,8 @@ function werkstek_get_kantoorruimte_archive_items() {
             return $second['date_timestamp'] <=> $first['date_timestamp'];
         }
 
-        if ($first['is_popular'] !== $second['is_popular']) {
-            return $second['is_popular'] <=> $first['is_popular'];
+        if ($first['menu_order'] !== $second['menu_order']) {
+            return $first['menu_order'] <=> $second['menu_order'];
         }
 
         return $second['date_timestamp'] <=> $first['date_timestamp'];
